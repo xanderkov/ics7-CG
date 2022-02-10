@@ -106,14 +106,21 @@ void MainWindow::on_calcButton_clicked()
         ui->statusbar->showMessage("Already calculated", STATUS_BAR_TIMEOUT);
         return;
     }
-    if (points.size() < 7) {
+    if (points.size() < 7)
+    {
         ui->statusbar->showMessage("Too few points", STATUS_BAR_TIMEOUT);
         return;
     }
     int i, j, k;
     angle_min = 1000;
     Line y_axis(1, 0, 0);
-    Point rectCenter = Rectangle(points[0], points[1], points[2], points[3]).getRectCenter();
+    if (isRect(points[0], points[1], points[2], points[3]))
+        rectCenter = Rectangle(points[0], points[1], points[2], points[3]).getRectCenter();
+    else
+    {
+        ui->statusbar->showMessage("It is not rectangle", STATUS_BAR_TIMEOUT);
+        return;
+    }
     for (i = 4; i < points.size() - 2; ++i)
         for (j = i + 1; j < points.size() - 1; ++j)
             for (k = j + 1; k < points.size(); ++k)
@@ -184,10 +191,18 @@ void MainWindow::paintEvent(QPaintEvent *)
         return;
 
     // find scale factor
-    x_max = qMax(qMax(points[i_max].x, points[j_max].x), qMax(points[k_max].x, incenterMax.x));
+    maxRect = qMax(qMax(points[0].x, qMax(points[1].x, points[3].x)), qMax(points[2].x, points[3].x));
+    x_max = qMax(qMax(points[i_max].x, qMax(points[j_max].x, incenterMax.x)), qMax(points[k_max].x, incenterMax.x));
+    x_max = qMax(maxRect, x_max);
+    maxRect = qMax(qMax(points[0].y, qMax(points[1].y, points[3].y)), qMax(points[2].y, points[3].y));
     y_max = qMax(qMax(points[i_max].y, points[j_max].y), qMax(points[k_max].y, incenterMax.y));
+    y_max = qMax(maxRect, y_max);
+    minRect = qMin(qMin(points[0].x, qMin(points[1].x, points[3].x)), qMin(points[2].x, points[3].x));
     x_min = qMin(qMin(points[i_max].x, points[j_max].x), qMin(points[k_max].x, incenterMax.x));
+    x_min = qMin(minRect, x_min);
+    minRect = qMin(qMax(points[0].y, qMin(points[1].y, points[3].y)), qMin(points[2].y, points[3].y));
     y_min = qMin(qMin(points[i_max].y, points[j_max].y), qMin(points[k_max].y, incenterMax.y));
+    y_min = qMin(minRect, y_min);
     double scale_x = 0.9 * PAINT_WIDTH / (x_max - x_min);
     double scale_y = 0.9 * PAINT_HEIGHT / (y_max - y_min);
     scale_factor = qMin(scale_x, scale_y);
@@ -195,89 +210,89 @@ void MainWindow::paintEvent(QPaintEvent *)
     // draw points
     painter.setPen(Qt::red);
     painter.setBrush(Qt::red);
-    foreach (const Point &point, points)
-    {
-        double x = x_coord(point.x);
-        double y = y_coord(point.y);
-        if (0 <= x && x <= PAINT_WIDTH && 0 <= y && y <= PAINT_HEIGHT)
-        {
-            painter.drawEllipse(x - 2, y - 2, 4, 4);
-        }
-    }
+    rectCenter = Rectangle(points[0], points[1], points[2], points[3]).getRectCenter();
+
+    painter.drawEllipse(coord(rectCenter), 5, 5);
+    painter.drawEllipse(coord(incenterMax), 5, 5);
+
+
 
     // draw triangle
     painter.setPen(QPen(Qt::green, 3));
-    painter.setBrush(QBrush(Qt::Dense4Pattern));
-    painter.drawPolygon(QPolygonF() << coord(points[i_max]) << coord(points[j_max]) << coord(points[k_max]));
+    painter.setBrush(QBrush(Qt::Dense1Pattern));
 
     Triangle triangle(points[i_max], points[j_max], points[k_max]);
 
-    const QVector<int> indices = {
-        i_max,
-        j_max,
-        k_max
-    };
+    painter.drawLine(coord(points[i_max]), coord(points[j_max]));
+    painter.drawLine(coord(points[j_max]), coord(points[k_max]));
+    painter.drawLine(coord(points[i_max]), coord(points[k_max]));
+    painter.setPen(QPen(Qt::blue, 3));
+    painter.setBrush(QBrush(Qt::Dense1Pattern));
+    painter.drawLine(coord(points[0]), coord(points[1]));
+    painter.drawLine(coord(points[1]), coord(points[2]));
+    painter.drawLine(coord(points[2]), coord(points[3]));
+    painter.drawLine(coord(points[3]), coord(points[0]));
 
-    const QVector<Line> sides =
+    painter.setPen(QPen(Qt::gray, 3));
+    painter.setBrush(QBrush(Qt::Dense1Pattern));
+    painter.drawLine(coord(points[0]), coord(points[2]));
+    painter.drawLine(coord(points[1]), coord(points[3]));
+
+
+    painter.setPen(QPen(Qt::black, 3));
+    painter.setBrush(QBrush(Qt::Dense1Pattern));
+    painter.drawLine(coord(points[i_max]), coord(incenterMax));
+    painter.drawLine(coord(points[j_max]), coord(incenterMax));
+    painter.drawLine(coord(points[k_max]), coord(incenterMax));
+    painter.setPen(QPen(Qt::red, 3));
+    painter.drawLine(coord(rectCenter), coord(incenterMax));
+
+
+    painter.setPen(QPen(Qt::gray, 3));
+    painter.setBrush(QBrush(Qt::Dense5Pattern));
+
+    painter.setPen(Qt::red);
+    painter.setBrush(Qt::red);
+
+    char txt[] = " 1 {1.11, 1.11}";
+    sprintf(txt, "%d {%.2f, %.2f}", 0, incenterMax.x, incenterMax.y);
+    painter.drawText(coord(incenterMax), txt);
+
+    sprintf(txt, "%d {%.2f, %.2f}", 0, rectCenter.x, rectCenter.y);
+    painter.drawText(coord(rectCenter), txt);
+
+    painter.drawEllipse(coord(points[i_max]), 5, 5);
+    sprintf(txt, "%d {%.2f, %.2f}", 0, points[i_max].x, points[i_max].y);
+    painter.drawText(coord(points[i_max]), txt);
+
+    painter.drawEllipse(coord(points[j_max]), 5, 5);
+    sprintf(txt, "%d {%.2f, %.2f}", 0, points[j_max].x, points[j_max].y);
+    painter.drawText(coord(points[j_max]), txt);
+
+    painter.drawEllipse(coord(points[k_max]), 5, 5);
+    sprintf(txt, "%d {%.2f, %.2f}", 0, points[k_max].x, points[k_max].y);
+    painter.drawText(coord(points[k_max]), txt);
+
+    painter.setPen(QPen(Qt::gray, 3));
+    painter.setBrush(QBrush(Qt::Dense5Pattern));
+    const double x0 = x_coord(rectCenter.x);
+    const double y0 = y_coord(rectCenter.y);
+    if (0 <= x0 && x0 <= PAINT_WIDTH && 0 <= y0 && y0 <= PAINT_HEIGHT)
     {
-        Line(points[j_max], points[k_max]),
-        Line(points[k_max], points[i_max]),
-        Line(points[i_max], points[j_max])
-    };
+        double startAngle, spanAngle;
+        if (incenterMax.x >= 0 && incenterMax.y >= 0
+         || incenterMax.x <= 0 && incenterMax.y <= 0) {
+            spanAngle = degrees(angle_min) * 16;
+            startAngle = 0;
+        }
+        else {
+            startAngle = 90 * 16;
+            spanAngle = degrees(angle_min) * 16;
+        }
 
-    const QVector<Line> altitudes =
-    {
-        Line(points[j_max], incenterMax),
-        Line(points[k_max], incenterMax),
-        Line(points[i_max], incenterMax)
-    };
-
-    const QVector<Point> Bs =
-    {
-        intersection(altitudes[0], sides[0]),
-        intersection(altitudes[1], sides[1]),
-        intersection(altitudes[2], sides[2])
-    };
-
-    painter.setPen(QPen(Qt::blue, 2));
-    for (int i = 0; i != 3; ++i)
-        painter.drawLine(coord(points[indices[i]]), coord(Bs[i]));
-}
-
-void MainWindow::drawLine(const Line &line, QPainter &painter)
-{
-    const double dx = x_max - x_min;
-    const double dy = y_max - y_min;
-    const double sx = PAINT_WIDTH / (dx * scale_factor);
-    const double sy = PAINT_HEIGHT / (dy * scale_factor);
-    const double cx = 0.5 * dx;
-    const double cy = 0.5 * dy;
-    const double rx = x_min + cx * (1 + sx);
-    const double ry = y_min + cy * (1 + sy);
-    const double lx = x_min + cx * (1 - sx);
-    const double ly = y_min + cy * (1 - sy);
-
-    const QVector<Line> borders =
-    {
-        Line(Point(lx, ly), Point(lx, ry)),
-        Line(Point(lx, ly), Point(rx, ly)),
-        Line(Point(rx, ry), Point(rx, ly)),
-        Line(Point(rx, ry), Point(lx, ry))
-    };
-
-    QVector<Point> borders_borders;
-    foreach (const Line &border, borders)
-    {
-
-        if (parallel(line, border))
-            continue;
-
-        Point point = intersection(line, border);
-        if ((ly - EPS <= point.y && point.y <= ry + EPS) && (lx - EPS <= point.x && point.x <= rx + EPS) && !borders_borders.contains(point))
-            borders_borders.push_back(point);
+        painter.drawPie(x0-25, y0 - 25, 50, 50, startAngle, spanAngle);
     }
-    Q_ASSERT(borders_borders.size() == 2);
-    painter.drawLine(coord(borders_borders[0]), coord(borders_borders[1]));
-    borders_borders.clear();
 }
+
+
 

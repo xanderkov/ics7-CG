@@ -4,7 +4,7 @@
 #include <istream>
 #include <ostream>
 
-#define EPS 1E-9
+#define EPS 1E-5
 
 double degrees(double radians);
 
@@ -56,7 +56,7 @@ Point intersection(const Line& a, const Line& b);
 
 double angle(const Line& a, const Line& b);
 
-double getLength(const Line& a);
+double getLength(Point A, Point B);
 
 bool parallel(const Line& a, const Line& b);
 
@@ -91,5 +91,7 @@ std::ostream& operator<<(std::ostream& os, const Rectangle& rect);
 Line getCenterLine(Rectangle Rect, Triangle Tri);
 
 double getAngle(Line A);
+
+bool isRect(Point A, Point B, Point C, Point D);
 
 #endif // LOGIC_H

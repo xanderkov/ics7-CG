@@ -58,8 +58,8 @@ private:
     int j_max = 0, i_max = 0, k_max = 0;
     double angle_min = 1000;
     Point incenterMax;
-
-    double x_max = 0, y_max = 0, x_min = 0, y_min = 0;
+    Point rectCenter;
+    double x_max = 0, y_max = 0, x_min = 0, y_min = 0, maxRect, minRect;
     double scale_factor;
 
     static const int STATUS_BAR_TIMEOUT = 10000;

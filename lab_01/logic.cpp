@@ -93,9 +93,8 @@ Line::Line(double A, double B, double C)
 Line::Line(const Point& A, const Point& B)
     : A(A.y - B.y)
     , B(B.x - A.x)
-    , C(skew_product(A, B)) {
-    assert(this->A || this->B);
-}
+    , C(skew_product(A, B)) {}
+
 
 Point Line::normal_vector() const
 {
@@ -145,29 +144,25 @@ std::ostream& operator<<(std::ostream& os, const Line& line)
 
 Triangle::Triangle(const Point& A, const Point& B, const Point& C)
 {
-    assert(!on_one_line(A, B, C));
 
     Triangle::A = A;
     Triangle::B = B;
     Triangle::C = C;
 }
 
-double getLength(const Line& a)
+double getLength(Point A, Point B)
 {
-    Point A = a.A, B = a.B;
-    return sqrt((B.x - A.x) * (B.x - A.x) + (B.y - A.y) * (B.y - A.y));
+    double len = sqrt((B.x - A.x) * (B.x - A.x) + (B.y - A.y) * (B.y - A.y));
+    return len;
 }
 
 Point Triangle::incenter() const
 {
     double x, y;
-    Line AB = Line(A, B);
-    Line AC = Line(A, C);
-    Line BC = Line(B, C);
-    x = ((getLength(AB) * A.x + getLength(AC) * C.x + getLength(AB) * B.x) /
-         (getLength(AB) + getLength(AC) + getLength(BC)));
-    y = ((getLength(AB) * A.y + getLength(AC) * C.y + getLength(AB) * B.y) /
-         (getLength(AB) + getLength(AC) + getLength(BC)));
+    x = ((getLength(A, B) * C.x + getLength(A, C) * B.x + getLength(C, B) * A.x) /
+         (getLength(A, B) + getLength(A, C) + getLength(B, C)));
+    y = ((getLength(A, B) * C.y + getLength(A, C) * B.y + getLength(C, B) * A.y) /
+         (getLength(A, B) + getLength(A, C) + getLength(B, C)));
     return Point(x, y);
 }
 
@@ -201,7 +196,6 @@ std::ostream& operator<<(std::ostream& os, const Rectangle& rect)
 
 Rectangle::Rectangle(const Point& A, const Point& B, const Point& C, const Point& D)
 {
-    assert(!on_one_line(A, B, C));
 
     Rectangle::A = A;
     Rectangle::B = B;
@@ -218,6 +212,19 @@ Line getCenterLine(Rectangle Rect, Triangle Tri)
 
 double getAngle(Line A)
 {
-    Line abscissa = Line(Point(0, 0), Point(0, 1));
+    Line abscissa = Line(Point(0, 0), Point(1, 0));
     return angle(A, abscissa);
+}
+
+bool isRect(Point A, Point B, Point C, Point D)
+{
+    Line AB = Line(A, B);
+    Line AD = Line(A, D);
+    Line CD = Line(C, D);
+    Line BC = Line(B, C);
+
+    if ((getLength(A, B) > EPS) && (getLength(B, C) > EPS) && (getLength(C, D) > 0) && (getLength(D, A) > 0))
+        if (parallel(AB, CD) && parallel(AD, BC) && angle(AB, AD) - 90 < EPS  && angle(CD, AD) - 90 < EPS  && angle(CD, BC) - 90 < EPS)
+            return true;
+    return false;
 }
