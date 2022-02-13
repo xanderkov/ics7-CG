@@ -52,6 +52,7 @@ QPen MainWindow::choosePen(int i) const
 
 void MainWindow::drawOriginalImage()
 {
+    scene->clear();
     Transform transform;
     for (int i = transforms.size() - 1; i >= 0; --i)
         transform.combine(transforms[i]);
@@ -70,9 +71,14 @@ void MainWindow::drawOriginalImage()
     QVector<Point> _rhomb(4);
     for (int i = 0; i != 4; ++i)
     {
-        _rhomb[i] = transform.apply(points[i + 1]);
+        _rhomb[i] = transform.apply(points[i]);
         paint_max.x = qMax(qAbs(_rhomb[i].x), paint_max.x);
         paint_max.y = qMax(qAbs(_rhomb[i].y), paint_max.y);
+    }
+    for (int i = 0; i < points.length(); i++)
+    {
+        paint_max.x = qMax(qAbs(points[i].x), paint_max.x);
+        paint_max.y = qMax(qAbs(points[i].y), paint_max.y);
     }
 
     if (autoscaling)
@@ -97,7 +103,7 @@ void MainWindow::drawOriginalImage()
     for (int i = 0; i < n; ++i)
         circle[i] = coord(transform.apply(points[n + 4 + i]));
 
-    int m = PAINT_HEIGHT * compress / (2 * NORMAL_SCALE_FACTOR);
+    //int m = PAINT_HEIGHT * compress / (2 * NORMAL_SCALE_FACTOR);
     for (int i = 0; i < 3; ++i)
         scene->addLine(QLineF(rhomb[i], rhomb[i + 1]));
     for (int i = 0; i < n - 1; ++i)
@@ -106,7 +112,7 @@ void MainWindow::drawOriginalImage()
         polygon << astroida[i] << astroida[i + 1];
         scene->addPolygon(polygon);
     }
-    for (int i = 0; i < n - 1; ++i)
+    for (int i = 0; i < n - 10; ++i)
     {
         QPolygonF polygon;
         polygon << circle[i] << circle[i + 1];
@@ -165,6 +171,10 @@ void MainWindow::on_pushButtonTransfer_clicked()
     translation.translate(Point(x, y));
     transforms.push_back(translation);
 
+
+
+    drawOriginalImage();
+
     ui->statusbar->showMessage("Translated successful", STATUS_BAR_TIMEOUT);
     update();
 }
@@ -183,6 +193,8 @@ void MainWindow::on_pushButtonScale_clicked()
     scaling.scale(Point(kx, ky), Point(x, y));
     transforms.push_back(scaling);
 
+    drawOriginalImage();
+
     ui->statusbar->showMessage("Scaled successful", STATUS_BAR_TIMEOUT);
     update();
 }
@@ -200,6 +212,8 @@ void MainWindow::on_pushButtonTurn_clicked()
     rotation.rotate(alpha * M_PI / 180, Point(x, y));
     transforms.push_back(rotation);
 
+    drawOriginalImage();
+
     ui->statusbar->showMessage("Rotated successful", STATUS_BAR_TIMEOUT);
     update();
 }
@@ -207,12 +221,33 @@ void MainWindow::on_pushButtonTurn_clicked()
 
 void MainWindow::on_pushButtonBack_clicked()
 {
+    if (transforms.empty())
+    {
+        ui->statusbar->showMessage("There are no transforms");
+        return;
+    }
 
+    transforms.pop_back();
+
+    drawOriginalImage();
+
+    ui->statusbar->showMessage("Undo successful", STATUS_BAR_TIMEOUT);
+    update();
 }
 
 
 void MainWindow::on_checkBox_stateChanged(int arg1)
 {
     autoscaling = arg1;
+}
+
+
+void MainWindow::on_pushButtonOriginal_clicked()
+{
+    while (!transforms.isEmpty())
+        transforms.pop_back();
+    drawOriginalImage();
+    ui->statusbar->showMessage("Undo successful", STATUS_BAR_TIMEOUT);
+    update();
 }
 

@@ -36,6 +36,8 @@ private slots:
 
     void on_checkBox_stateChanged(int arg1);
 
+    void on_pushButtonOriginal_clicked();
+
 private:
     void initPoints();
     double x_coord(double x) const;
@@ -58,7 +60,7 @@ private:
     static const int NORMAL_SCALE_FACTOR = 35;
     static const int COMPRESS_MIN = (2.0 * NORMAL_SCALE_FACTOR) / PAINT_HEIGHT;
     double compress = 1;
-    bool autoscaling = 1;
+    bool autoscaling = 0;
 
     double a = 3;
     double b = 3;
