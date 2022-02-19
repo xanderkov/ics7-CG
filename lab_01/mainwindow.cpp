@@ -42,7 +42,7 @@ void MainWindow::on_addButton_clicked()
     ui->tableWidget->setItem(i, 0, new QTableWidgetItem(QString::number(x)));
     ui->tableWidget->setItem(i, 1, new QTableWidgetItem(QString::number(y)));
 
-    ui->statusbar->showMessage("Point added successful", STATUS_BAR_TIMEOUT);
+    ui->statusbar->showMessage("Точка успешно добавлена", STATUS_BAR_TIMEOUT);
 }
 
 
@@ -52,12 +52,12 @@ void MainWindow::on_delButton_clicked()
     int i = ui->indexEdit->text().toInt(&ok);
     if (!ok)
     {
-        ui->statusbar->showMessage("Invalid index", STATUS_BAR_TIMEOUT);
+        ui->statusbar->showMessage("Не верный индекс", STATUS_BAR_TIMEOUT);
         return;
     }
     if (i <= 0 || i > points.size())
     {
-        ui->statusbar->showMessage("Index out of range", STATUS_BAR_TIMEOUT);
+        ui->statusbar->showMessage("Индекс вышел за пределы количества точек", STATUS_BAR_TIMEOUT);
         return;
     }
 
@@ -66,7 +66,7 @@ void MainWindow::on_delButton_clicked()
 
     ui->tableWidget->removeRow(i - 1);
 
-    ui->statusbar->showMessage("Point deleted successful", STATUS_BAR_TIMEOUT);
+    ui->statusbar->showMessage("Точка удалена успешна", STATUS_BAR_TIMEOUT);
 }
 
 
@@ -82,9 +82,9 @@ void MainWindow::on_tableWidget_itemChanged(QTableWidgetItem *item)
     if (!ok)
     {
         if (item->column())
-            ui->statusbar->showMessage("Invalid y", STATUS_BAR_TIMEOUT);
+            ui->statusbar->showMessage("Не верно введеный y", STATUS_BAR_TIMEOUT);
         else
-            ui->statusbar->showMessage("Invalid x", STATUS_BAR_TIMEOUT);
+            ui->statusbar->showMessage("Не верно введеный x", STATUS_BAR_TIMEOUT);
         item->setText(QString::number(points[item->row()][item->column()]));
         return;
     }
@@ -95,7 +95,7 @@ void MainWindow::on_tableWidget_itemChanged(QTableWidgetItem *item)
     j_max = 0;
     points[item->row()][item->column()] = coord;
 
-    ui->statusbar->showMessage("Point edited successful", STATUS_BAR_TIMEOUT);
+    ui->statusbar->showMessage("Точка добавлена успешна", STATUS_BAR_TIMEOUT);
 }
 
 
@@ -103,12 +103,12 @@ void MainWindow::on_calcButton_clicked()
 {
     if (j_max)
     {
-        ui->statusbar->showMessage("Already calculated", STATUS_BAR_TIMEOUT);
+        ui->statusbar->showMessage("Уже вычесленно", STATUS_BAR_TIMEOUT);
         return;
     }
     if (points.size() < 7)
     {
-        ui->statusbar->showMessage("Too few points", STATUS_BAR_TIMEOUT);
+        ui->statusbar->showMessage("Слишком мало точек", STATUS_BAR_TIMEOUT);
         return;
     }
     int i, j, k;
@@ -118,7 +118,7 @@ void MainWindow::on_calcButton_clicked()
         rectCenter = Rectangle(points[0], points[1], points[2], points[3]).getRectCenter();
     else
     {
-        ui->statusbar->showMessage("It is not rectangle", STATUS_BAR_TIMEOUT);
+        ui->statusbar->showMessage("Не может быть постоен прямоугольник", STATUS_BAR_TIMEOUT);
         return;
     }
     for (i = 4; i < points.size() - 2; ++i)
@@ -139,15 +139,15 @@ void MainWindow::on_calcButton_clicked()
 
     if (!j_max)
     {
-        ui->statusbar->showMessage("No one triangle can be drawn", STATUS_BAR_TIMEOUT);
+        ui->statusbar->showMessage("Не один треугольник не может быть построен", STATUS_BAR_TIMEOUT);
         return;
     }
 
     ui->statusbar->showMessage(
-        "Triangle found successful on points "
+        "Треугольник построен на точках "
         + QString::number(i_max + 1) + ", "
-        + QString::number(j_max + 1) + " and "
-        + QString::number(k_max + 1) + ". Angle: "
+        + QString::number(j_max + 1) + " и "
+        + QString::number(k_max + 1) + ". Угол: "
         + QString::number(angle_min * 180 / 3.1415926)
     );
     update();
@@ -258,19 +258,19 @@ void MainWindow::paintEvent(QPaintEvent *)
     sprintf(txt, "%d {%.2f, %.2f}", 0, incenterMax.x, incenterMax.y);
     painter.drawText(coord(incenterMax), txt);
 
-    sprintf(txt, "%d {%.2f, %.2f}", 0, rectCenter.x, rectCenter.y);
+    sprintf(txt, "%d {%.2f, %.2f}", 1, rectCenter.x, rectCenter.y);
     painter.drawText(coord(rectCenter), txt);
 
     painter.drawEllipse(coord(points[i_max]), 5, 5);
-    sprintf(txt, "%d {%.2f, %.2f}", 0, points[i_max].x, points[i_max].y);
+    sprintf(txt, " %d) {%.2f, %.2f}", i_max, points[i_max].x, points[i_max].y);
     painter.drawText(coord(points[i_max]), txt);
 
     painter.drawEllipse(coord(points[j_max]), 5, 5);
-    sprintf(txt, "%d {%.2f, %.2f}", 0, points[j_max].x, points[j_max].y);
+    sprintf(txt, " %d) {%.2f, %.2f}", j_max, points[j_max].x, points[j_max].y);
     painter.drawText(coord(points[j_max]), txt);
 
     painter.drawEllipse(coord(points[k_max]), 5, 5);
-    sprintf(txt, "%d {%.2f, %.2f}", 0, points[k_max].x, points[k_max].y);
+    sprintf(txt, " %d) {%.2f, %.2f}", k_max, points[k_max].x, points[k_max].y);
     painter.drawText(coord(points[k_max]), txt);
 
     painter.setPen(QPen(Qt::gray, 3));
@@ -280,17 +280,30 @@ void MainWindow::paintEvent(QPaintEvent *)
     if (0 <= x0 && x0 <= PAINT_WIDTH && 0 <= y0 && y0 <= PAINT_HEIGHT)
     {
         double startAngle, spanAngle;
-        if (incenterMax.x >= 0 && incenterMax.y >= 0
-         || incenterMax.x <= 0 && incenterMax.y <= 0) {
+        if (incenterMax.x >= rectCenter.x && incenterMax.y >= rectCenter.y)
+        {
             spanAngle = degrees(angle_min) * 16;
             startAngle = 0;
+
         }
-        else {
+        else if (incenterMax.x <= rectCenter.x && incenterMax.y >= rectCenter.y)
+        {
             startAngle = 90 * 16;
             spanAngle = degrees(angle_min) * 16;
         }
-
+        else if (incenterMax.x <= rectCenter.x && incenterMax.y <= rectCenter.y)
+        {
+            startAngle = 180 * 16;
+            spanAngle = degrees(angle_min) * 16;
+        }
+        else
+        {
+            startAngle = 270 * 16;
+            spanAngle = degrees(angle_min) * 16;
+        }
         painter.drawPie(x0-25, y0 - 25, 50, 50, startAngle, spanAngle);
+
+
     }
 }
 

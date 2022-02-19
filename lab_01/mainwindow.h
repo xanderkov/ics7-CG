@@ -63,7 +63,7 @@ private:
     double scale_factor;
 
     static const int STATUS_BAR_TIMEOUT = 10000;
-    static const int PAINT_WIDTH = 600;
-    static const int PAINT_HEIGHT = 500;
+    static const int PAINT_WIDTH = 1000;
+    static const int PAINT_HEIGHT = 600;
 };
 #endif // MAINWINDOW_H

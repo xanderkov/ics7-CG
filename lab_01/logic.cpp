@@ -115,7 +115,7 @@ Line Line::perpendicular(const Point& point) const
 Point intersection(const Line& a, const Line& b)
 {
     double delta = a.A * b.B - a.B * b.A;
-    assert(std::abs(delta) > EPS);
+    //assert(std::abs(delta) > EPS);
     double delta_x = -a.C * b.B + a.B * b.C;
     double delta_y = -a.A * b.C + a.C * b.A;
     return Point(delta_x / delta, delta_y / delta);

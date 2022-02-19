@@ -43,6 +43,8 @@ private:
     double x_coord(double x) const;
     double y_coord(double y) const;
     QPointF coord(const Point &point) const;
+    double anti_coord_x(double x) const;
+    double anti_coord_y(double y) const;
     QPen choosePen(int i) const;
 
 private:

@@ -143,6 +143,9 @@
         <verstretch>0</verstretch>
        </sizepolicy>
       </property>
+      <property name="verticalScrollBarPolicy">
+       <enum>Qt::ScrollBarAlwaysOff</enum>
+      </property>
      </widget>
     </item>
    </layout>

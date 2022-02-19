@@ -36,6 +36,16 @@ QPointF MainWindow::coord(const Point &point) const
     return QPointF(x_coord(point.x), y_coord(point.y));
 }
 
+double MainWindow::anti_coord_x(double x) const
+{
+    return (-PAINT_WIDTH / 2 + x) / NORMAL_SCALE_FACTOR * compress;
+}
+
+double MainWindow::anti_coord_y(double y) const
+{
+    return (PAINT_HEIGHT / 2 - y) / NORMAL_SCALE_FACTOR * compress;
+}
+
 
 QPen MainWindow::choosePen(int i) const
 {
@@ -102,7 +112,9 @@ void MainWindow::drawOriginalImage()
         astroida[i] = coord(transform.apply(points[i + 4]));
     for (int i = 0; i < n; ++i)
         circle[i] = coord(transform.apply(points[n + 4 + i]));
-
+    QVector<QPointF> central_point(2);
+    central_point[0] = coord(transform.apply(points[2 * n + 1]));
+    central_point[1] = coord(transform.apply(points[2 * n + 2]));
     //int m = PAINT_HEIGHT * compress / (2 * NORMAL_SCALE_FACTOR);
     for (int i = 0; i < 3; ++i)
         scene->addLine(QLineF(rhomb[i], rhomb[i + 1]));
@@ -118,11 +130,20 @@ void MainWindow::drawOriginalImage()
         polygon << circle[i] << circle[i + 1];
         scene->addPolygon(polygon);
     }
+    scene->addEllipse(QRectF(central_point[0].x() - 1, central_point[0].y() - 1,
+            2, 2), QPen(Qt::red));
+    char txt[] = " {1.11, 1.11}";
+    QGraphicsTextItem *num = new QGraphicsTextItem;
+    num->setPos(central_point[0]);
+    sprintf(txt, "{%.2f, %.2f}", anti_coord_x(central_point[0].x()), anti_coord_y(central_point[0].y()));
+    num->setPlainText(QString(txt));
+
+    scene->addItem(num);
 }
 
 void MainWindow::initPoints()
 {
-    points = QVector<Point>(2 * n + 4);
+    points = QVector<Point>(2 * n + 6);
 
     points[0] = Point(-3, 0);
     points[1] = Point(-3, -5);
@@ -149,6 +170,8 @@ void MainWindow::initPoints()
             sint
         );
     }
+    points[2 * n + 1] = Point(0, 0);
+    points[2 * n + 2] = Point(0.0001, 0.0001);
 
 }
 
@@ -170,8 +193,6 @@ void MainWindow::on_pushButtonTransfer_clicked()
     Transform translation;
     translation.translate(Point(x, y));
     transforms.push_back(translation);
-
-
 
     drawOriginalImage();
 
