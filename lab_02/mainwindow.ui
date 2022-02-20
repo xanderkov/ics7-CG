@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>896</width>
-    <height>600</height>
+    <width>1366</width>
+    <height>700</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -18,8 +18,8 @@
   </property>
   <property name="minimumSize">
    <size>
-    <width>800</width>
-    <height>600</height>
+    <width>1366</width>
+    <height>700</height>
    </size>
   </property>
   <property name="maximumSize">
@@ -43,14 +43,14 @@
            <string/>
           </property>
           <property name="placeholderText">
-           <string>x coord</string>
+           <string>коорд. x перемещениия</string>
           </property>
          </widget>
         </item>
         <item>
          <widget class="QLineEdit" name="yCoordEdit">
           <property name="placeholderText">
-           <string>y coord</string>
+           <string>коорд. y перемещения</string>
           </property>
          </widget>
         </item>
@@ -68,14 +68,14 @@
         <item>
          <widget class="QLineEdit" name="xCoefEdit">
           <property name="placeholderText">
-           <string>x coefficient</string>
+           <string>коэф. kx мастштабирования</string>
           </property>
          </widget>
         </item>
         <item>
          <widget class="QLineEdit" name="yCoefEdit">
           <property name="placeholderText">
-           <string>y coefficient</string>
+           <string>коэф. ky мастштабирования</string>
           </property>
          </widget>
         </item>
@@ -106,7 +106,7 @@
         <item>
          <widget class="QLineEdit" name="angleEdit">
           <property name="placeholderText">
-           <string>angle</string>
+           <string>угол поворота</string>
           </property>
          </widget>
         </item>
@@ -129,7 +129,7 @@
       <item>
        <widget class="QCheckBox" name="checkBox">
         <property name="text">
-         <string>autoscallenig</string>
+         <string>Автомасштабирование</string>
         </property>
        </widget>
       </item>
@@ -144,7 +144,7 @@
        </sizepolicy>
       </property>
       <property name="verticalScrollBarPolicy">
-       <enum>Qt::ScrollBarAlwaysOff</enum>
+       <enum>Qt::ScrollBarAsNeeded</enum>
       </property>
      </widget>
     </item>

@@ -7,7 +7,7 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    scene = new QGraphicsScene(0, 0, PAINT_WIDTH, PAINT_HEIGHT);
+    scene = new QGraphicsScene();
     ui->graphicsView->setScene(scene);
 
     initPoints();
@@ -187,8 +187,8 @@ bool MainWindow::get_var(double &var, const QLineEdit *lineEdit, const QString &
 
 void MainWindow::on_pushButtonTransfer_clicked()
 {
-    if (!(get_var(x, ui->xCoordLine, "Invalid x")
-           && get_var(y, ui->yCoordEdit, "Invalid y")))
+    if (!(get_var(x, ui->xCoordLine, "Неверно введена координата x перемещения")
+           && get_var(y, ui->yCoordEdit, "Неверно введена координата y перемещения")))
             return;
     Transform translation;
     translation.translate(Point(x, y));
@@ -196,7 +196,7 @@ void MainWindow::on_pushButtonTransfer_clicked()
 
     drawOriginalImage();
 
-    ui->statusbar->showMessage("Translated successful", STATUS_BAR_TIMEOUT);
+    ui->statusbar->showMessage("Перемещение прошло успешно", STATUS_BAR_TIMEOUT);
     update();
 }
 
@@ -204,10 +204,10 @@ void MainWindow::on_pushButtonTransfer_clicked()
 void MainWindow::on_pushButtonScale_clicked()
 {
     double x, y, kx, ky;
-    if (!(get_var(x, ui->xCoordLine, "Invalid x")
-       && get_var(y, ui->yCoordEdit, "Invalid y")
-       && get_var(kx, ui->xCoefEdit, "Invalid kx")
-       && get_var(ky, ui->yCoefEdit, "Invalid ky")))
+    if (!(get_var(x, ui->xCoordLine, "Неверно введена координата x перемещения")
+       && get_var(y, ui->yCoordEdit, "Неверно введена координата y перемещения")
+       && get_var(kx, ui->xCoefEdit, "Неверно введена координата kx масташтабирования")
+       && get_var(ky, ui->yCoefEdit, "Неверно введена координата ky масташтабирования")))
         return;
 
     Transform scaling;
@@ -216,7 +216,7 @@ void MainWindow::on_pushButtonScale_clicked()
 
     drawOriginalImage();
 
-    ui->statusbar->showMessage("Scaled successful", STATUS_BAR_TIMEOUT);
+    ui->statusbar->showMessage("Масташтабирование прошло успешно", STATUS_BAR_TIMEOUT);
     update();
 }
 
@@ -224,9 +224,9 @@ void MainWindow::on_pushButtonScale_clicked()
 void MainWindow::on_pushButtonTurn_clicked()
 {
     double x, y, alpha;
-    if (!(get_var(x, ui->xCoordLine, "Invalid x")
-       && get_var(y, ui->yCoordEdit, "Invalid y")
-       && get_var(alpha, ui->angleEdit, "Invalid angle")))
+    if (!(get_var(x, ui->xCoordLine, "Неверно введена координата x перемещения")
+       && get_var(y, ui->yCoordEdit, "Неверно введена координата y перемещения")
+       && get_var(alpha, ui->angleEdit, "Неверно введен угол поворота")))
         return;
 
     Transform rotation;
@@ -235,7 +235,7 @@ void MainWindow::on_pushButtonTurn_clicked()
 
     drawOriginalImage();
 
-    ui->statusbar->showMessage("Rotated successful", STATUS_BAR_TIMEOUT);
+    ui->statusbar->showMessage("Поворот проведен успешно", STATUS_BAR_TIMEOUT);
     update();
 }
 
@@ -244,7 +244,7 @@ void MainWindow::on_pushButtonBack_clicked()
 {
     if (transforms.empty())
     {
-        ui->statusbar->showMessage("There are no transforms");
+        ui->statusbar->showMessage("Нельзя вернуться назад");
         return;
     }
 
@@ -252,7 +252,7 @@ void MainWindow::on_pushButtonBack_clicked()
 
     drawOriginalImage();
 
-    ui->statusbar->showMessage("Undo successful", STATUS_BAR_TIMEOUT);
+    ui->statusbar->showMessage("Успешно возращено назад", STATUS_BAR_TIMEOUT);
     update();
 }
 
@@ -268,7 +268,7 @@ void MainWindow::on_pushButtonOriginal_clicked()
     while (!transforms.isEmpty())
         transforms.pop_back();
     drawOriginalImage();
-    ui->statusbar->showMessage("Undo successful", STATUS_BAR_TIMEOUT);
+    ui->statusbar->showMessage("Успешно возращено назад", STATUS_BAR_TIMEOUT);
     update();
 }
 
