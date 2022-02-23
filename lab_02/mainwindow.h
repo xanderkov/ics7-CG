@@ -38,6 +38,7 @@ private slots:
 
     void on_pushButtonOriginal_clicked();
 
+
 private:
     void initPoints();
     double x_coord(double x) const;
@@ -54,12 +55,12 @@ private:
     void drawOriginalImage();
 
     double x_max = 0, y_max = 0, x_min = 0, y_min = 0, maxRect, minRect;
-    static const int PAINT_WIDTH = 400;
-    static const int PAINT_HEIGHT = 300;
+    static const int PAINT_WIDTH = 600;
+    static const int PAINT_HEIGHT = 600;
     double scale_factor;
 
     static const int STATUS_BAR_TIMEOUT = 5000;
-    static const int NORMAL_SCALE_FACTOR = 35;
+    static const int NORMAL_SCALE_FACTOR = 25;
     static const int COMPRESS_MIN = (2.0 * NORMAL_SCALE_FACTOR) / PAINT_HEIGHT;
     double compress = 1;
     bool autoscaling = 0;

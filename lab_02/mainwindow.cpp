@@ -7,7 +7,7 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    scene = new QGraphicsScene();
+    scene = new QGraphicsScene(0, 0, PAINT_WIDTH, PAINT_HEIGHT);
     ui->graphicsView->setScene(scene);
 
     initPoints();
@@ -124,7 +124,7 @@ void MainWindow::drawOriginalImage()
         polygon << astroida[i] << astroida[i + 1];
         scene->addPolygon(polygon);
     }
-    for (int i = 0; i < n - 10; ++i)
+    for (int i = 0; i < n - 5; ++i)
     {
         QPolygonF polygon;
         polygon << circle[i] << circle[i + 1];
@@ -260,6 +260,7 @@ void MainWindow::on_pushButtonBack_clicked()
 void MainWindow::on_checkBox_stateChanged(int arg1)
 {
     autoscaling = arg1;
+    on_pushButtonOriginal_clicked();
 }
 
 
