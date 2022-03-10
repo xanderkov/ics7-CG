@@ -100,34 +100,31 @@
             <item>
              <layout class="QHBoxLayout" name="horizontalLayout">
               <item>
-               <widget class="QDoubleSpinBox" name="x1SpinBox">
+               <widget class="QSpinBox" name="x1SpinBox">
+                <property name="suffix">
+                 <string/>
+                </property>
                 <property name="prefix">
                  <string>X1: </string>
                 </property>
                 <property name="minimum">
-                 <double>-1000.000000000000000</double>
+                 <number>-10000</number>
                 </property>
                 <property name="maximum">
-                 <double>1000.000000000000000</double>
-                </property>
-                <property name="value">
-                 <double>540.000000000000000</double>
+                 <number>10000</number>
                 </property>
                </widget>
               </item>
               <item>
-               <widget class="QDoubleSpinBox" name="y1SpinBox">
+               <widget class="QSpinBox" name="y1SpinBox">
                 <property name="prefix">
                  <string>Y1: </string>
                 </property>
                 <property name="minimum">
-                 <double>-1000.000000000000000</double>
+                 <number>-10000</number>
                 </property>
                 <property name="maximum">
-                 <double>1000.000000000000000</double>
-                </property>
-                <property name="value">
-                 <double>350.000000000000000</double>
+                 <number>10000</number>
                 </property>
                </widget>
               </item>
@@ -145,34 +142,34 @@
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_2">
             <item>
-             <widget class="QDoubleSpinBox" name="x2SpinBox">
+             <widget class="QSpinBox" name="x2SpinBox">
               <property name="prefix">
                <string>X2: </string>
               </property>
               <property name="minimum">
-               <double>-10000.000000000000000</double>
+               <number>-10000</number>
               </property>
               <property name="maximum">
-               <double>10000.000000000000000</double>
+               <number>10000</number>
               </property>
               <property name="value">
-               <double>695.000000000000000</double>
+               <number>350</number>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QDoubleSpinBox" name="y2SpinBox">
+             <widget class="QSpinBox" name="y2SpinBox">
               <property name="prefix">
                <string>Y2: </string>
               </property>
               <property name="minimum">
-               <double>-10000.000000000000000</double>
+               <number>-10000</number>
               </property>
               <property name="maximum">
-               <double>10000.000000000000000</double>
+               <number>10000</number>
               </property>
               <property name="value">
-               <double>500.000000000000000</double>
+               <number>350</number>
               </property>
              </widget>
             </item>
@@ -181,34 +178,47 @@
          </layout>
         </item>
         <item>
-         <widget class="QDoubleSpinBox" name="angleSpinBox">
+         <spacer name="verticalSpacer_3">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="QSpinBox" name="angleSpinBox">
           <property name="prefix">
-           <string>Угол поворота в градусах: </string>
+           <string>Угол поворота: </string>
           </property>
           <property name="minimum">
-           <double>-360.000000000000000</double>
+           <number>-360</number>
           </property>
           <property name="maximum">
-           <double>360.000000000000000</double>
+           <number>360</number>
           </property>
           <property name="value">
-           <double>15.000000000000000</double>
+           <number>0</number>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QDoubleSpinBox" name="lineSpinBox">
+         <widget class="QSpinBox" name="lineSpinBox">
           <property name="prefix">
            <string>Длина линии: </string>
           </property>
           <property name="minimum">
-           <double>-10000.000000000000000</double>
+           <number>-1000</number>
           </property>
           <property name="maximum">
-           <double>100000.000000000000000</double>
+           <number>1000</number>
           </property>
           <property name="value">
-           <double>99.989999999999995</double>
+           <number>0</number>
           </property>
          </widget>
         </item>
