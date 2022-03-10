@@ -278,7 +278,7 @@
            </size>
           </property>
           <property name="text">
-           <string>Выбрать цвет фона (Нет)</string>
+           <string>Выбрать цвет фона</string>
           </property>
          </widget>
         </item>

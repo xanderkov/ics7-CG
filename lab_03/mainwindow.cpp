@@ -100,10 +100,10 @@ void MainWindow::drawPoint(const QPoint &point)
 
 void MainWindow::on_lineDrawButton_clicked()
 {
-    const int x1 = ui->x1SpinBox->value();
-    const int y1 = -ui->y1SpinBox->value();
-    const int x2 = ui->x2SpinBox->value();
-    const int y2 = -ui->y2SpinBox->value();
+    const int x1 = 360 + ui->x1SpinBox->value();
+    const int y1 = 360-ui->y1SpinBox->value();
+    const int x2 = 360 + ui->x2SpinBox->value();
+    const int y2 = 360-ui->y2SpinBox->value();
     const QLine line(x1, y1, x2, y2);
 
     Canvas canvas = { &image, &fgColor };
@@ -126,7 +126,6 @@ void MainWindow::on_spectrDrawButton_clicked()
 {
     int length = ui->lineSpinBox->value();
     int dangle = ui->angleSpinBox->value();
-     ui->statusbar->showMessage(QString::number(dangle) + " μs");
     if (dangle == 0 || length == 0)
     {
         ui->statusbar->showMessage("Введены не верные данные угла или длины линии спектра");

@@ -44,7 +44,7 @@ private:
 
     QColor fgColor;
     QColor bgColor;
-    const QColor defaultBgColor = QColor(11, 50, 50);
+    const QColor defaultBgColor = QColor(11, 11, 11);
     const QColor defaultFgColor = QColor(10, 200, 10);
     QImage image;
     QGraphicsScene *scene;
