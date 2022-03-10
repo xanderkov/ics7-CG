@@ -54,7 +54,8 @@ void MainWindow::clearImage()
 
 void MainWindow::on_colorBackButton_clicked()
 {
-    bgColor = QColorDialog::getColor(bgColor, this, "Pick a FG color", QColorDialog::DontUseNativeDialog);
+    bgColor = QColorDialog::getColor(bgColor, this, "Pick a BG color", QColorDialog::DontUseNativeDialog);
+    image = QImage(721, 721, QImage::Format_ARGB32);
     image.fill(bgColor);
     imageView();
 }
@@ -132,7 +133,7 @@ void MainWindow::on_spectrDrawButton_clicked()
         return;
     }
 
-    Canvas canvas = { &image, &bgColor };
+    Canvas canvas = { &image, &fgColor };
     for (int angle = 0; angle < 360; angle += dangle)
     {
         const int x2 = 360 + round(length * cos(toRadians(angle)));
