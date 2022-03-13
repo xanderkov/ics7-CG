@@ -26,7 +26,6 @@ def draw_line_brez_smoth(canvas, ps, pf, fill):
     stairs = []
     st = 1
     while x != pf[0] or y != pf[1]:
-        canvas.create_oval(x, y, x, y, outline=fill[round(e) - 1])
         if e < w:
             if steep == 0:  # dy < dx
                 x += sx  # -1 if dx < 0, 0 if dx = 0, 1 if dx > 0
@@ -69,7 +68,6 @@ def draw_line_cda(canvas, ps, pf, fill):
     stairs = []
     st = 1
     while abs(x - pf[0]) > 1 or abs(y - pf[1]) > 1:
-        canvas.create_line(round(x), round(y), round(x + 1), round(y + 1), fill=fill)
         if (abs(int(x) - int(x + sx)) >= 1 and tg > 1) or (abs(int(y) - int(y + sy)) >= 1 >= tg):
             stairs.append(st)
             st = 0
@@ -90,8 +88,6 @@ def draw_line_vu(canvas, ps, pf, fill):
     I = 100
     stairs = []
     fills = get_rgb_intensity(canvas, fill, bg_color, I)
-    if x1 == x2 and y1 == y2:
-        canvas.create_oval(x1, y1, x1, y1, outline=fills[100])
 
     steep = abs(y2 - y1) > abs(x2 - x1)
 
@@ -124,8 +120,6 @@ def draw_line_vu(canvas, ps, pf, fill):
     # main loop
     if steep:
         for x in range(xpx1, xpx2):
-            canvas.create_oval(int(y), x + 1, int(y), x + 1, outline=fills[int((I - 1) * (abs(1 - y + int(y))))])
-            canvas.create_oval(int(y) + 1, x + 1, int(y) + 1, x + 1, outline=fills[int((I - 1) * (abs(y - int(y))))])
 
             if (abs(int(x) - int(x + 1)) >= 1 and tg > 1) or \
                     (not 1 > abs(int(y) - int(y + tg)) >= tg):
@@ -136,10 +130,6 @@ def draw_line_vu(canvas, ps, pf, fill):
             y += tg
     else:
         for x in range(xpx1, xpx2):
-            canvas.create_oval(x + 1, int(y), x + 1, int(y), outline=fills[round((I - 1) * (abs(1 - y + floor(y))))])
-            canvas.create_oval(x + 1, int(y) + 1, x + 1, int(y) + 1,
-                               outline=fills[round((I - 1) * (abs(y - floor(y))))])
-
             if (abs(int(x) - int(x + 1)) >= 1 and tg > 1) or \
                     (not 1 > abs(int(y) - int(y + tg)) >= tg):
                 stairs.append(st)
@@ -172,7 +162,6 @@ def draw_line_brez_float(canvas, ps, pf, fill):
     stairs = []
     st = 1
     while x != pf[0] or y != pf[1]:
-        canvas.create_oval(x, y, x, y, outline=fill)
         # выбираем пиксель
         if e >= 0:
             if steep == 1:  # dy >= dx
@@ -214,7 +203,6 @@ def draw_line_brez_int(canvas, ps, pf, fill):
     stairs = []
     st = 1
     while x != pf[0] or y != pf[1]:
-        canvas.create_oval(x, y, x, y, outline=fill)
         if e >= 0:
             if steep == 1:
                 x += sx

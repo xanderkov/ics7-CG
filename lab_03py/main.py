@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 import time
 from constants import *
 from algorithms import *
+import algorithms_without_draw
 
 
 # Получение параметров для отрисовки
@@ -38,17 +39,19 @@ def draw(test_mode):
                         funcs[choise[0]](canvas, [xs, ys], [xf, yf], fill=line_color)
                 else:
                     angle = fangle.get()
+                    length = len_line.get()
                     if angle:
                         try:
                             angle = int(angle)
+                            length = int(length)
                         except:
                             messagebox.showwarning('Ошибка ввода',
-                                                   'Введено нечисловое значение для шага анализа!')
+                                                   'Введено нечисловое значение для шага анализа или длина линии!')
                         if angle:
                             if choise[0] != 5:
-                                test(1, funcs[choise[0]], angle, [xs, ys], [xf, yf])
+                                test(1, funcs[choise[0]], angle, length)
                             else:
-                                standart_test(1, angle, [xs, ys], [xf, yf])
+                                standart_test(1, angle, length)
                         else:
                             messagebox.showwarning('Ошибка ввода',
                                                    'Задано нулевое значение для угла поворота!')
@@ -92,10 +95,12 @@ def analyze(mode):
 
 
 # замер времени
-def test(flag, method, angle, pb, pe):
+def test(flag, method, angle, length):
     global line_color
     total = 0
     steps = int(360 // angle)
+    pb = [canvW /2, canvH / 2]
+    pe = [canvW / 2 + round(length * cos(angle)), canvH / 2 - round(length * sin(angle))]
     for i in range(steps):
         cur1 = time.time()
         if flag == 0:
@@ -108,10 +113,12 @@ def test(flag, method, angle, pb, pe):
     return total / steps
 
 
-def standart_test(flag, angle, pb, pe):
+def standart_test(flag, angle, length):
     global line_color
     total = 0
     steps = int(360 // angle)
+    pb = [canvW /2, canvH / 2]
+    pe = [canvW / 2 + round(length * cos(angle)), canvH / 2 - round(length * sin(angle))]
     for i in range(steps):
         cur1 = time.time()
         if flag == 0:
@@ -129,12 +136,12 @@ def time_bar(length):
     close_plt()
     plt.figure(2, figsize=(9, 7))
     times = []
-    angle = 1
+    angle = 3
     pb = [center[0], center[1]]
     pe = [center[0] + 100, center[1]]
     for i in range(5):
-        times.append(test(0, funcs[i], angle, pb, pe))
-    clean()
+        times.append(test(0, funcs_test[i], angle, length))
+    #clean()
     Y = range(len(times))
 
     L = ('Цифровой\nдифференциальный\nанализатор', 'Брезенхем\n(вещественные)',
@@ -162,6 +169,7 @@ def smoth_analyze(methods, length):
     plt.xlabel("Угол")
     plt.ylabel("Номер шага (длина линии " + str(length) + ")")
     plt.grid(True)
+    analize = True
     for i in methods:
         max_len = []
         nums = []
@@ -172,7 +180,7 @@ def smoth_analyze(methods, length):
         pe = [center[0] + length, center[1]]
 
         for j in range(90 // step):
-            stairs = funcs[i](canvas, pb, pe, line_color)
+            stairs = funcs_test[i](canvas, pb, pe, line_color)
             turn_point(radians(step), pe, pb)
             if stairs:
                 max_len.append(max(stairs))
@@ -181,7 +189,7 @@ def smoth_analyze(methods, length):
             nums.append(len(stairs))
             angles.append(angle)
             angle += step
-        clean()
+        #clean()
         plt.figure(1)
         plt.plot(angles, nums, label=names[i])
         plt.legend()
@@ -290,6 +298,9 @@ method_list.place(x=0, y=1, width=w_menu, height=110)
 fill_list(method_list)
 funcs = (draw_line_cda, draw_line_brez_float, draw_line_brez_int,
          draw_line_brez_smoth, draw_line_vu, canvas.create_line)
+
+funcs_test = (algorithms_without_draw.draw_line_cda, algorithms_without_draw.draw_line_brez_float, algorithms_without_draw.draw_line_brez_int,
+         algorithms_without_draw.draw_line_brez_smoth, algorithms_without_draw.draw_line_vu, canvas.create_line)
 
 lb1 = Label(coords_frame, bg=color_menu, text='Начало отрезка:')
 lb2 = Label(coords_frame, bg=color_menu, text='Конец отрезка:')
