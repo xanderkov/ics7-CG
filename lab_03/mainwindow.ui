@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>994</width>
-    <height>669</height>
+    <width>1375</width>
+    <height>689</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -356,7 +356,6 @@
         </property>
         <property name="font">
          <font>
-          <family>Segoe UI</family>
           <pointsize>9</pointsize>
           <bold>false</bold>
          </font>
@@ -381,8 +380,8 @@
       </property>
       <property name="minimumSize">
        <size>
-        <width>500</width>
-        <height>0</height>
+        <width>1100</width>
+        <height>650</height>
        </size>
       </property>
      </widget>

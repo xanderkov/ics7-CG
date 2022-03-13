@@ -9,6 +9,9 @@
 #include "algorithms.h"
 #include <QMessageBox>
 
+#define HEIGHT 650
+#define WIDTH 1100
+
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -39,13 +42,17 @@ private slots:
 
     void on_spectrDrawButton_clicked();
 
+    void on_calcTimeButton_clicked();
+
+    void on_compareLadderButton_clicked();
+
 private:
     Ui::MainWindow *ui;
 
     QColor fgColor;
     QColor bgColor;
     const QColor defaultBgColor = QColor(11, 11, 11);
-    const QColor defaultFgColor = QColor(10, 200, 10);
+    const QColor defaultFgColor = QColor(255, 255, 255);
     QImage image;
     QGraphicsScene *scene;
 };

@@ -4,6 +4,7 @@
 #include <QElapsedTimer>
 #include <QStatusBar>
 #include <cmath>
+#include "form.h"
 
 
 MainWindow::MainWindow(QWidget *parent)
@@ -11,13 +12,14 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow),
     fgColor(defaultFgColor),
     bgColor(defaultBgColor),
-    scene(new QGraphicsScene(0, 0, 720, 720))
+    scene(new QGraphicsScene(0, 0, WIDTH, HEIGHT))
 {
     ui->setupUi(this);
     ui->graphicsView->setScene(scene);
     clearImage();
     imageView();
     on_clearButton_clicked();
+    colorLabel(ui->fgLabel, fgColor);
 }
 
 MainWindow::~MainWindow()
@@ -46,7 +48,7 @@ void MainWindow::on_colorLineButton_clicked()
 
 void MainWindow::clearImage()
 {
-    image = QImage(721, 721, QImage::Format_ARGB32);
+    image = QImage(WIDTH, HEIGHT, QImage::Format_ARGB32);
     image.fill(defaultBgColor);
     imageView();
 }
@@ -55,7 +57,7 @@ void MainWindow::clearImage()
 void MainWindow::on_colorBackButton_clicked()
 {
     bgColor = QColorDialog::getColor(bgColor, this, "Pick a BG color", QColorDialog::DontUseNativeDialog);
-    image = QImage(721, 721, QImage::Format_ARGB32);
+    image = QImage(WIDTH, HEIGHT, QImage::Format_ARGB32);
     image.fill(bgColor);
     imageView();
 }
@@ -100,10 +102,10 @@ void MainWindow::drawPoint(const QPoint &point)
 
 void MainWindow::on_lineDrawButton_clicked()
 {
-    const int x1 = 360 + ui->x1SpinBox->value();
-    const int y1 = 360-ui->y1SpinBox->value();
-    const int x2 = 360 + ui->x2SpinBox->value();
-    const int y2 = 360-ui->y2SpinBox->value();
+    const int x1 = WIDTH / 2 + ui->x1SpinBox->value();
+    const int y1 = HEIGHT / 2-ui->y1SpinBox->value();
+    const int x2 = WIDTH / 2 + ui->x2SpinBox->value();
+    const int y2 = HEIGHT / 2-ui->y2SpinBox->value();
     const QLine line(x1, y1, x2, y2);
 
     Canvas canvas = { &image, &fgColor };
@@ -135,11 +137,57 @@ void MainWindow::on_spectrDrawButton_clicked()
     Canvas canvas = { &image, &fgColor };
     for (int angle = 0; angle < 360; angle += dangle)
     {
-        const int x2 = 360 + round(length * cos(toRadians(angle)));
-        const int y2 = 360 - round(length * sin(toRadians(angle)));
-        if (!drawLine(QLine(360, 360, x2, y2), canvas))
+        const int x2 = WIDTH / 2 + round(length * cos(toRadians(angle)));
+        const int y2 = HEIGHT / 2 - round(length * sin(toRadians(angle)));
+        if (!drawLine(QLine(WIDTH / 2, HEIGHT / 2, x2, y2), canvas))
             drawPoint(QPoint(x2, y2));
     }
     imageView();
+}
+
+
+void MainWindow::on_calcTimeButton_clicked()
+{
+    const int N = 1000;
+    const int M = 100;
+    double ns[6][M];
+
+    QImage image(721, 721, QImage::Format_ARGB32);
+    Canvas canvas = { &image, &fgColor };
+
+    bool (*f[7])(const QLine &, Canvas &) = {
+        dda,
+        wu,
+        dda,
+        bresenhamFloat,
+        bresenhamInteger,
+        bresenhamAntialiased,
+        wu
+    };
+
+    for (int i = 0; i != 7; ++i) {
+        for (int j = 1; j != M + 1; ++j) {
+            QElapsedTimer timer;
+            timer.start();
+
+            for (int k = 0; k != N; ++k)
+                f[i](QLine(360, 360, 360 + j, 360 - j), canvas);
+
+            ns[(i > 1? i - 2 : 0)][j - 1] = static_cast<double>(timer.nsecsElapsed()) / N;
+        }
+    }
+
+
+
+    QVector<QVector<double>> qns(6);
+    for (int i = 0; i != 6; ++i)
+        std::copy(ns[i], ns[i] + M, std::back_inserter(qns[i]));
+    Form dialog(qns, M);
+}
+
+
+void MainWindow::on_compareLadderButton_clicked()
+{
+
 }
 
