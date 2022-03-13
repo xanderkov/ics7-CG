@@ -4,245 +4,8 @@ from tkinter import colorchooser
 from math import radians, cos, sin, floor
 import matplotlib.pyplot as plt
 import time
-# from tkmacosx import Button
-
-
-from calculations import sign, get_rgb_intensity
-
-canvW, canvH = 900, 650
-line_r = 150
-
-
-def draw_line_brez_smoth(canvas, ps, pf, fill):
-    I = 100
-    fill = get_rgb_intensity(canvas, fill, bg_color, I)
-    dx = pf[0] - ps[0]
-    dy = pf[1] - ps[1]
-    sx = sign(dx)
-    sy = sign(dy)
-    dy = abs(dy)
-    dx = abs(dx)
-    if dy >= dx:
-        dx, dy = dy, dx
-        steep = 1  #
-    else:
-        steep = 0  #
-    tg = dy / dx * I  # тангенс угла наклона (умножаем на инт., чтобы не приходилось умножать внутри цикла
-    e = I / 2  # интенсивность для высвечивания начального пикселя
-    w = I - tg  # пороговое значение
-    x = ps[0]
-    y = ps[1]
-    stairs = []
-    st = 1
-    while x != pf[0] or y != pf[1]:
-        canvas.create_oval(x, y, x, y, outline=fill[round(e) - 1])
-        if e < w:
-            if steep == 0:  # dy < dx
-                x += sx  # -1 if dx < 0, 0 if dx = 0, 1 if dx > 0
-            else:  # dy >= dx
-                y += sy  # -1 if dy < 0, 0 if dy = 0, 1 if dy > 0
-            st += 1  # stepping
-            e += tg
-        elif e >= w:
-            x += sx
-            y += sy
-            e -= w
-            stairs.append(st)
-            st = 0
-    if st:
-        stairs.append(st)
-    return stairs
-
-
-def draw_line_cda(canvas, ps, pf, fill):
-    dx = abs(pf[0] - ps[0])
-    dy = abs(pf[1] - ps[1])
-
-    # for stairs counting
-    if dx:
-        tg = dy / dx
-    else:
-        tg = 0
-
-    # steep - max growth
-    if dx > dy:
-        steep = dx
-    else:
-        steep = dy
-    sx = (pf[0] - ps[0]) / steep  # step of x
-    sy = (pf[1] - ps[1]) / steep  # step of y
-
-    # set line to start
-    x = ps[0]
-    y = ps[1]
-    stairs = []
-    st = 1
-    while abs(x - pf[0]) > 1 or abs(y - pf[1]) > 1:
-        canvas.create_line(round(x), round(y), round(x + 1), round(y + 1), fill=fill)
-        if (abs(int(x) - int(x + sx)) >= 1 and tg > 1) or (abs(int(y) - int(y + sy)) >= 1 >= tg):
-            stairs.append(st)
-            st = 0
-        else:
-            st += 1
-        x += sx
-        y += sy
-    if st:
-        stairs.append(st)
-    return stairs
-
-
-def draw_line_vu(canvas, ps, pf, fill):
-    x1 = ps[0]
-    x2 = pf[0]
-    y1 = ps[1]
-    y2 = pf[1]
-    I = 100
-    stairs = []
-    fills = get_rgb_intensity(canvas, fill, bg_color, I)
-    if x1 == x2 and y1 == y2:
-        canvas.create_oval(x1, y1, x1, y1, outline=fills[100])
-
-    steep = abs(y2 - y1) > abs(x2 - x1)
-
-    if steep:
-        x1, y1 = y1, x1
-        x2, y2 = y2, x2
-    if x1 > x2:
-        x1, x2 = x2, x1
-        y1, y2 = y2, y1
-
-    dx = x2 - x1
-    dy = y2 - y1
-
-    if dx == 0:
-        tg = 1
-    else:
-        tg = dy / dx
-
-    # first endpoint
-    xend = round(x1)
-    yend = y1 + tg * (xend - x1)
-    xpx1 = xend
-    y = yend + tg
-
-    # second endpoint
-    xend = int(x2 + 0.5)
-    xpx2 = xend
-    st = 0
-
-    # main loop
-    if steep:
-        for x in range(xpx1, xpx2):
-            canvas.create_oval(int(y), x + 1, int(y), x + 1, outline=fills[int((I - 1) * (abs(1 - y + int(y))))])
-            canvas.create_oval(int(y) + 1, x + 1, int(y) + 1, x + 1, outline=fills[int((I - 1) * (abs(y - int(y))))])
-
-            if (abs(int(x) - int(x + 1)) >= 1 and tg > 1) or \
-                    (not 1 > abs(int(y) - int(y + tg)) >= tg):
-                stairs.append(st)
-                st = 0
-            else:
-                st += 1
-            y += tg
-    else:
-        for x in range(xpx1, xpx2):
-            canvas.create_oval(x + 1, int(y), x + 1, int(y), outline=fills[round((I - 1) * (abs(1 - y + floor(y))))])
-            canvas.create_oval(x + 1, int(y) + 1, x + 1, int(y) + 1,
-                               outline=fills[round((I - 1) * (abs(y - floor(y))))])
-
-            if (abs(int(x) - int(x + 1)) >= 1 and tg > 1) or \
-                    (not 1 > abs(int(y) - int(y + tg)) >= tg):
-                stairs.append(st)
-                st = 0
-            else:
-                st += 1
-            y += tg
-    return stairs
-
-
-# Брезенхема с действительными коэффами
-def draw_line_brez_float(canvas, ps, pf, fill):
-    dx = pf[0] - ps[0]
-    dy = pf[1] - ps[1]
-    sx = sign(dx)
-    sy = sign(dy)
-    dy = abs(dy)
-    dx = abs(dx)
-
-    if dy >= dx:
-        dx, dy = dy, dx
-        steep = 1  # шагаем по y
-    else:
-        steep = 0
-
-    tg = dy / dx  # tангенс угла наклона
-    e = tg - 1 / 2  # начальное значение ошибки
-    x = ps[0]  # начальный икс
-    y = ps[1]  # начальный игрек
-    stairs = []
-    st = 1
-    while x != pf[0] or y != pf[1]:
-        canvas.create_oval(x, y, x, y, outline=fill)
-        # выбираем пиксель
-        if e >= 0:
-            if steep == 1:  # dy >= dx
-                x += sx
-            else:  # dy < dx
-                y += sy
-            e -= 1  # отличие от целого
-            stairs.append(st)
-            st = 0
-        if e <= 0:
-            if steep == 0:  # dy < dx
-                x += sx
-            else:  # dy >= dx
-                y += sy
-            st += 1
-            e += tg  # отличие от целого
-
-    if st:
-        stairs.append(st)
-    return stairs
-
-
-# Брезенхема с целыми коэффами
-def draw_line_brez_int(canvas, ps, pf, fill):
-    dx = pf[0] - ps[0]
-    dy = pf[1] - ps[1]
-    sx = sign(dx)
-    sy = sign(dy)
-    dy = abs(dy)
-    dx = abs(dx)
-    if dy >= dx:
-        dx, dy = dy, dx
-        steep = 1
-    else:
-        steep = 0
-    e = 2 * dy - dx  # отличие от вещественного (e = tg - 1 / 2) tg = dy / dx
-    x = ps[0]
-    y = ps[1]
-    stairs = []
-    st = 1
-    while x != pf[0] or y != pf[1]:
-        canvas.create_oval(x, y, x, y, outline=fill, width=1)
-        if e >= 0:
-            if steep == 1:
-                x += sx
-            else:
-                y += sy
-            stairs.append(st)
-            st = 0
-            e -= 2 * dx  # отличие от вещественного (e -= 1)
-        if e <= 0:
-            if steep == 0:
-                x += sx
-            else:
-                y += sy
-            st += 1
-            e += 2 * dy  # difference (e += tg)
-
-    if st:
-        stairs.append(st)
-    return stairs
+from constants import *
+from algorithms import *
 
 
 # Получение параметров для отрисовки
@@ -336,7 +99,6 @@ def test(flag, method, angle, pb, pe):
     for i in range(steps):
         cur1 = time.time()
         if flag == 0:
-            # method(pb, pe)
             method(canvas, pb, pe, fill=bg_color)  # line_color)
         else:
             method(canvas, pb, pe, fill=line_color)
@@ -353,7 +115,6 @@ def standart_test(flag, angle, pb, pe):
     for i in range(steps):
         cur1 = time.time()
         if flag == 0:
-            # method(pb, pe)
             canvas.create_line(pb, pe, fill=bg_color)  # line_color)
         else:
             canvas.create_line(pb, pe, fill=line_color)
@@ -376,11 +137,11 @@ def time_bar(length):
     clean()
     Y = range(len(times))
 
-    L = ('Digital\ndifferential\nanalyzer', 'Bresenham\n(real coeffs)',
-         'Bresenham\n(int coeffs)', 'Bresenham\n(smooth)', 'Wu')
+    L = ('Цифровой\nдифференциальный\nанализатор', 'Брезенхем\n(вещественные)',
+             'Брезенхем\n(целые)', 'Брезенхем\n(с устранением\nступенчатости)', 'ВУ')
     plt.bar(Y, times, align='center')
     plt.xticks(Y, L)
-    plt.ylabel("Work time in sec. (line len. " + str(length) + ")")
+    plt.ylabel("Время в секундах. (длина линии "+ str(length) + ")")
     plt.show()
 
 
@@ -395,11 +156,11 @@ def turn_point(angle, p, center):
 def smoth_analyze(methods, length):
     close_plt()
     names = ('Цифровой\nдифференциальный\nанализатор', 'Брезенхем\n(вещественные)',
-             'Брезенхем\n(целые)', 'Брезенхем\n(с устранением\nступенчатости)', 'Wu')
+             'Брезенхем\n(целые)', 'Брезенхем\n(с устранением\nступенчатости)', 'ВУ')
     plt.figure(1)
-    plt.title("Stepping analysis")
-    plt.xlabel("Angle")
-    plt.ylabel("Number of steps(line length " + str(length) + ")")
+    plt.title("Анализ ступенчатости")
+    plt.xlabel("Угол")
+    plt.ylabel("Номер шага (длина линии " + str(length) + ")")
     plt.grid(True)
     for i in methods:
         max_len = []
@@ -446,29 +207,6 @@ def clean():
     canvas.delete("all")
     draw_axes()
 
-
-# Справка
-def show_info():
-    messagebox.showinfo('Информация',
-                        'С помощью данной программы можно построить отрезки пятью способами:\n'
-                        '1) методом цифрового дифференциального анализатора;\n'
-                        '2) методом Брезенхема с действитльными коэфициентами;\n'
-                        '3) методом Брезенхема с целыми коэфициентами;\n'
-                        '4) методом Брезенхема со сглаживанием;\n'
-                        '5) методом Ву;\n'
-                        '6) стандартым методом.\n'
-                        '\nДля построения отрезка необходимо задать его начало\n'
-                        'и конец и выбрать метод построения из списка предложенных.\n'
-                        '\nДля визуального анализа (построения пучка отрезков)\n'
-                        'необходимо задать начало и конец,\n'
-                        'выбрать метод для анализа,\n'
-                        'а также угол поворота отрезка.\n'
-                        '\nДля анализа ступенчатости можно выбрать сразу несколько методов.\n'
-                        'Чтобы это сделать, зажмите SHIFT при выборе.\n'
-                        'Анализ ступенчатости и времени исполнения приводится\n'
-                        'в виде графиков pyplot.\n'
-                        'Введите длину отрезка, если хотите сделать анализ программы\n'
-                        'при построении отрезков определенной длины.')
 
 
 # Список методов прорисовки отрезка
@@ -522,27 +260,24 @@ root.resizable(0, 0)
 root.title('Лабораторная работа №3')
 color_menu = "white"
 
-x_menu = 910
-w_menu = 400
-
 # коэффициенты для линии
-coords_frame = Frame(root, bg=color_menu, height=200, width=w_menu)
+coords_frame = Frame(root, bg=color_menu, height=250, width=w_menu)
 coords_frame.place(x=0, y=110)
 
 # угол
-angle_frame = Frame(root, bg=color_menu, height=200, width=w_menu)
-angle_frame.place(x=0, y=210)
+angle_frame = Frame(root, bg=color_menu, height=250, width=w_menu)
+angle_frame.place(x=0, y=250)
 
 # выбор цвета
 color_frame = Frame(root, bg=color_menu, height=150, width=w_menu)
-color_frame.place(x=0, y=300)
+color_frame.place(x=0, y=350)
 
 # сравнение
 comparison_frame = Frame(root, bg=color_menu, height=200, width=w_menu)
-comparison_frame.place(x=0, y=450)
+comparison_frame.place(x=0, y=500)
 
-# очистить, справка
-menu_frame = Frame(root, bg=color_menu, height=80, width=w_menu)
+# очистить
+menu_frame = Frame(root, bg=color_menu, height=50, width=w_menu)
 menu_frame.place(x=0, y=600)
 
 canvas = Canvas(root, width=canvW, height=canvH, bg='white')
@@ -580,43 +315,39 @@ fxf.place(x=30, y=75, width=60)
 fyf.place(x=115, y=75, width=60)
 fxs.insert(0, str(canvW / 2))
 fys.insert(0, str(canvH / 2))
-fxf.insert(0, str(canvW / 2 + line_r))
-fyf.insert(0, str(canvH / 2 + line_r))
+fxf.insert(0, 5)
+fyf.insert(0, 5)
 
-btn_draw = Button(coords_frame, text="Построить", command=lambda: draw(0))
-btn_draw.place(x=200, y=45, width=120, height=30)
+btn_draw = Button(coords_frame, text="Построить Линию", command=lambda: draw(0))
+btn_draw.place(x=3, y=105, width=120, height=30)
 
-lb_angle = Label(angle_frame, bg=color_menu, text="Угол поворота\n(в градусах):")
+lb_angle = Label(angle_frame, bg=color_menu, text="Угол поворота (в градусах):")
 lb_angle.place(x=2, y=2)
 
 fangle = Entry(angle_frame, bg="white")
-fangle.place(x=30, y=40, width=60)
+fangle.place(x=180, y=2, width=60)
 fangle.insert(0, "15")
 
-btn_viz = Button(angle_frame, text="Спектр", command=lambda: draw(1))
-btn_viz.place(x=200, y=30, width=120, height=25)
+btn_viz = Button(angle_frame, text="Построить Спектр", command=lambda: draw(1))
+btn_viz.place(x=3, y=70, width=120, height=25)
 
-lb_len = Label(comparison_frame, bg=color_menu, text="Длина линии\n(по умолчанию 100):")
-lb_len.place(x=2, y=2)
-len_line = Entry(comparison_frame, bg="white")
-len_line.place(x=40, y=40, width=60)
+lb_len = Label(angle_frame, bg=color_menu, text="Длина линии: ")
+lb_len.place(x=30, y=40)
+len_line = Entry(angle_frame, bg="white")
+len_line.place(x=180, y=40, width=60)
+len_line.insert(0, "100")
 btn_time = Button(comparison_frame, text="Сравнение времени построения", command=lambda: analyze(0))
-btn_time.place(x=3, y=70, width=250, height=25)
+btn_time.place(x=3, y=0, width=250, height=25)
 btn_smoth = Button(comparison_frame, text="Сравнение ступенчатости", command=lambda: analyze(1))
-btn_smoth.place(x=3, y=100, width=250, height=25)
+btn_smoth.place(x=3, y=30, width=250, height=25)
 
 btn_clean = Button(menu_frame, text="Очистить экран", command=clean)
 btn_clean.place(x=3, y=0, width=250)
-btn_help = Button(menu_frame, text="Справка", command=show_info)
-btn_help.place(x=3, y=30, width=250)
 # btn_exit = Button(menu_frame, text=u"Выход", command=close_all)
 # btn_exit.place(x=60, y=0, width=95)
 
 
 ### --------------- выбор цветов ---------------
-line_color = 'black'
-bg_color = 'white'
-
 size = 15
 white_line = Button(color_frame, bg="white", activebackground="white", highlightcolor="white",
                     command=lambda: set_linecolor('white'))
@@ -668,15 +399,9 @@ blue_bg = Button(color_frame, bg="black", activebackground="black",
                  command=lambda: set_bgcolor("black"))
 blue_bg.place(x=120, y=110, height=size, width=size)
 
-# lb_line = Label(color_frame, bg=color_menu, text='Цвет линии (текущий:       ): ')
-# lb_line.place(x=2, y=5)
-# lb_lcolor = Label(color_frame, bg=line_color)
-# lb_lcolor.place(x=135, y=9, width=12, height=12)
-# lb_bg = Label(color_frame, bg=color_menu, text='Цвет фона: ')
-# lb_bg.place(x=2, y=80)
 
-lb_line = Button(color_frame, bg=color_menu, text='Цвет линии (текущий:       ): ', command=get_color_line)
-lb_line.place(x=2, y=5)
+lb_line = Button(color_frame, bg=color_menu, text='Цвет линии (текущий:): ', command=get_color_line)
+lb_line.place(x=2, y=5, width=170)
 lb_lcolor = Label(color_frame, bg=line_color)
 lb_lcolor.place(x=160, y=13, width=12, height=12)
 lb_bg = Button(color_frame, bg=color_menu, text='Цвет фона: ', command=get_color_bg)
