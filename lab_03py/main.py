@@ -100,7 +100,7 @@ def test(flag, method, angle, length):
     total = 0
     steps = int(360 // angle)
     pb = [canvW /2, canvH / 2]
-    pe = [canvW / 2 + round(length * cos(angle)), canvH / 2 - round(length * sin(angle))]
+    pe = [canvW / 2 + round(length * cos(0)), canvH / 2 - round(length * sin(0))]
     for i in range(steps):
         cur1 = time.time()
         if flag == 0:
@@ -118,7 +118,7 @@ def standart_test(flag, angle, length):
     total = 0
     steps = int(360 // angle)
     pb = [canvW /2, canvH / 2]
-    pe = [canvW / 2 + round(length * cos(angle)), canvH / 2 - round(length * sin(angle))]
+    pe = [canvW / 2 + round(length * cos(0)), canvH / 2 - round(length * sin(0))]
     for i in range(steps):
         cur1 = time.time()
         if flag == 0:
