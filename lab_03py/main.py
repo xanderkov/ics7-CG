@@ -136,7 +136,7 @@ def time_bar(length):
     close_plt()
     plt.figure(2, figsize=(9, 7))
     times = []
-    angle = 3
+    angle = 1
     pb = [center[0], center[1]]
     pe = [center[0] + 100, center[1]]
     for i in range(5):
@@ -162,7 +162,7 @@ def turn_point(angle, p, center):
 # Анализ ступечатости
 def smoth_analyze(methods, length):
     close_plt()
-    names = ('Цифровой\nдифференциальный\nанализатор', 'Брезенхем\n(вещественные)',
+    names = ('ЦДА+', 'Брезенхем\n(вещественные)',
              'Брезенхем\n(целые)', 'Брезенхем\n(с устранением\nступенчатости)', 'ВУ')
     plt.figure(1)
     plt.title("Анализ ступенчатости")
@@ -180,7 +180,7 @@ def smoth_analyze(methods, length):
         pe = [center[0] + length, center[1]]
 
         for j in range(90 // step):
-            stairs = funcs_test[i](canvas, pb, pe, line_color)
+            stairs = funcs[i](canvas, pb, pe, line_color)
             turn_point(radians(step), pe, pb)
             if stairs:
                 max_len.append(max(stairs))
@@ -189,7 +189,7 @@ def smoth_analyze(methods, length):
             nums.append(len(stairs))
             angles.append(angle)
             angle += step
-        #clean()
+        clean()
         plt.figure(1)
         plt.plot(angles, nums, label=names[i])
         plt.legend()
