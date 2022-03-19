@@ -1,6 +1,6 @@
 import sys
 from PyQt5 import QtWidgets, QtGui, QtCore
-import untitled
+import app
 from numpy import arange
 from time import time
 from math import pi, cos, sin, sqrt
@@ -10,7 +10,7 @@ from datetime import datetime
 from time1 import *
 
 
-class Visual(QtWidgets.QMainWindow, untitled.Ui_MainWindow):
+class Visual(QtWidgets.QMainWindow, app.Ui_MainWindow):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
@@ -50,7 +50,7 @@ class Visual(QtWidgets.QMainWindow, untitled.Ui_MainWindow):
         self.pushButton_clean.clicked.connect(self.clean_screen)
 
         self.action.triggered.connect(self.about)
-        self.statusBar().showMessage("Лабораторная работа №3, выполнила Козлова Ирина")
+        self.statusBar().showMessage("Лабораторная работа №4, выполнил Ковель А.Д.")
 
 
     def about(self):
