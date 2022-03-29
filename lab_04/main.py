@@ -20,11 +20,11 @@ class Visual(QtWidgets.QMainWindow, app.Ui_MainWindow):
         h = self.graphicsView.height()
         w = self.graphicsView.width()
         print(w-2, h-2)
+        self.bg_color = QtCore.Qt.white
         # self.scene.setSceneRect(-w/2, -h/2, w-2, h-2)
-        self.scene.setSceneRect(0, 0, w-2, h-2)
+        self.scene.setSceneRect(0, 0, w, h)
         self.pen = QtGui.QPen(QtCore.Qt.black)
         self.pen.setWidth(0)
-
         self.radioButtonBlack_bg.clicked.connect(self.set_black_bg)
         self.radioButtonBlue_bg.clicked.connect(self.set_blue_bg)
         self.radioButtonGreen_bg.clicked.connect(self.set_green_bg)
@@ -73,6 +73,7 @@ class Visual(QtWidgets.QMainWindow, app.Ui_MainWindow):
     def set_white(self):
         self.pen.setColor(QtCore.Qt.white)
     
+    
     def set_blue(self):
         self.pen.setColor(QtCore.Qt.blue)
 
@@ -98,23 +99,31 @@ class Visual(QtWidgets.QMainWindow, app.Ui_MainWindow):
             self.pen.setColor(QtCore.Qt.white)
         elif self.radioButtonYellow_bg.isChecked():
             self.pen.setColor(QtCore.Qt.yellow)
+        elif self.radioButtonFon_line.isChecked():
+            self.pen.setColor(self.bg_color)
 
     def set_black_bg(self):
+        self.bg_color = QtCore.Qt.black
         self.graphicsView.setStyleSheet("background-color: black")
 
     def set_white_bg(self):
+        self.bg_color = QtCore.Qt.white
         self.graphicsView.setStyleSheet("background-color: white")
 
     def set_blue_bg(self):
+        self.bg_color = QtCore.Qt.blue
         self.graphicsView.setStyleSheet("background-color: blue")
 
     def set_red_bg(self):
+        self.bg_color = QtCore.Qt.red
         self.graphicsView.setStyleSheet("background-color: red")
 
     def set_green_bg(self):
+        self.bg_color = QtCore.Qt.green
         self.graphicsView.setStyleSheet("background-color: #00ff00")
 
     def set_yellow_bg(self):
+        self.bg_color = QtCore.Qt.yellow
         self.graphicsView.setStyleSheet("background-color: yellow")
 
 
@@ -414,7 +423,7 @@ class Visual(QtWidgets.QMainWindow, app.Ui_MainWindow):
             x += 1
             if d < 0: # выбираем горизонталь
                 d += 2 * x + 1
-            else:  # выбираем диагональный
+            else: 
                 y -= 1
                 d += 2 * (x - y) + 1
         if fdraw:
@@ -438,7 +447,7 @@ class Visual(QtWidgets.QMainWindow, app.Ui_MainWindow):
         
         # 1 участок
         while x <= limit:
-            if func > 0: # диагональ
+            if func > 0:
                 y -= 1
                 func -= pow_a * y * 2
 

@@ -32,194 +32,196 @@
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout">
         <item>
-         <layout class="QVBoxLayout" name="verticalLayout_2">
-          <item>
-           <widget class="QLabel" name="label_2">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="text">
-             <string>Цвет фона</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QRadioButton" name="radioButtonWhite_bg">
-            <property name="text">
-             <string>Белый</string>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QRadioButton" name="radioButtonBlack_bg">
-            <property name="text">
-             <string>Черный</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QRadioButton" name="radioButtonYellow_bg">
-            <property name="text">
-             <string>Желтый</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QRadioButton" name="radioButtonGreen_bg">
-            <property name="text">
-             <string>Зеленый</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QRadioButton" name="radioButtonRed_bg">
-            <property name="text">
-             <string>Красный</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QRadioButton" name="radioButtonBlue_bg">
-            <property name="text">
-             <string>Синий</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
+         <widget class="QWidget" name="widget_2" native="true">
+          <layout class="QVBoxLayout" name="verticalLayout_15">
+           <item>
+            <widget class="QLabel" name="label_2">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string>Цвет фона</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QRadioButton" name="radioButtonWhite_bg">
+             <property name="text">
+              <string>Белый</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QRadioButton" name="radioButtonBlack_bg">
+             <property name="text">
+              <string>Черный</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QRadioButton" name="radioButtonYellow_bg">
+             <property name="text">
+              <string>Желтый</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QRadioButton" name="radioButtonGreen_bg">
+             <property name="text">
+              <string>Зеленый</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QRadioButton" name="radioButtonRed_bg">
+             <property name="text">
+              <string>Красный</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QRadioButton" name="radioButtonBlue_bg">
+             <property name="text">
+              <string>Синий</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
         </item>
         <item>
-         <layout class="QVBoxLayout" name="verticalLayout_3">
-          <item>
-           <widget class="QLabel" name="label_3">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="text">
-             <string>Цвет линии</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QRadioButton" name="radioButtonBlack_line">
-            <property name="text">
-             <string>Черный</string>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QRadioButton" name="radioButtonWhite_line">
-            <property name="text">
-             <string>Белый</string>
-            </property>
-            <property name="checked">
-             <bool>false</bool>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QRadioButton" name="radioButtonYellow_line">
-            <property name="text">
-             <string>Желтый</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QRadioButton" name="radioButtonGreen_line">
-            <property name="text">
-             <string>Зеленый</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QRadioButton" name="radioButtonRed_line">
-            <property name="text">
-             <string>Красный</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QRadioButton" name="radioButtonBlue_line">
-            <property name="text">
-             <string>Синий</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QRadioButton" name="radioButtonFon_line">
-            <property name="text">
-             <string>Цвет фона</string>
-            </property>
-            <property name="checked">
-             <bool>false</bool>
-            </property>
-           </widget>
-          </item>
-         </layout>
+         <widget class="QWidget" name="widget_4" native="true">
+          <layout class="QVBoxLayout" name="verticalLayout_3">
+           <item>
+            <widget class="QLabel" name="label_4">
+             <property name="text">
+              <string>Алгоритмы</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QRadioButton" name="radioButtonParam">
+             <property name="text">
+              <string>Параметрического уравнения</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QRadioButton" name="radioButtonMidPoint">
+             <property name="text">
+              <string>Алгоритма средней точки</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QRadioButton" name="radioButtonBres">
+             <property name="text">
+              <string>Алгоритма Брезенхема </string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QRadioButton" name="radioButtonCanon">
+             <property name="text">
+              <string>Канонического уравнения</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QRadioButton" name="radioButtonLib">
+             <property name="text">
+              <string>Библиотечная функция</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_8">
-          <item>
-           <layout class="QVBoxLayout" name="verticalLayout_4">
-            <item>
-             <widget class="QLabel" name="label_4">
-              <property name="text">
-               <string>Алгоритмы</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QRadioButton" name="radioButtonCanon">
-              <property name="text">
-               <string>Канонического уравнения</string>
-              </property>
-              <property name="checked">
-               <bool>true</bool>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QRadioButton" name="radioButtonParam">
-              <property name="text">
-               <string>Параметрического уравнения</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QRadioButton" name="radioButtonBres">
-              <property name="text">
-               <string>Алгоритма Брезенхема </string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QRadioButton" name="radioButtonMidPoint">
-              <property name="text">
-               <string>Алгоритма средней точки</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QRadioButton" name="radioButtonLib">
-              <property name="text">
-               <string>Библиотечная функция</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-         </layout>
+         <widget class="QWidget" name="widget_3" native="true">
+          <layout class="QVBoxLayout" name="verticalLayout_2">
+           <item>
+            <widget class="QLabel" name="label_3">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string>Цвет линии</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QRadioButton" name="radioButtonBlack_line">
+             <property name="text">
+              <string>Черный</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QRadioButton" name="radioButtonWhite_line">
+             <property name="text">
+              <string>Белый</string>
+             </property>
+             <property name="checked">
+              <bool>false</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QRadioButton" name="radioButtonYellow_line">
+             <property name="text">
+              <string>Желтый</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QRadioButton" name="radioButtonGreen_line">
+             <property name="text">
+              <string>Зеленый</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QRadioButton" name="radioButtonRed_line">
+             <property name="text">
+              <string>Красный</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QRadioButton" name="radioButtonFon_line">
+             <property name="text">
+              <string>Цвет фона</string>
+             </property>
+             <property name="checked">
+              <bool>false</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QRadioButton" name="radioButtonBlue_line">
+             <property name="text">
+              <string>Синий</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
         </item>
        </layout>
       </item>
@@ -277,7 +279,7 @@
              <double>10000.000000000000000</double>
             </property>
             <property name="value">
-             <double>100.000000000000000</double>
+             <double>0.000000000000000</double>
             </property>
            </widget>
           </item>
@@ -293,7 +295,7 @@
              <double>100000.000000000000000</double>
             </property>
             <property name="value">
-             <double>100.000000000000000</double>
+             <double>0.000000000000000</double>
             </property>
            </widget>
           </item>
@@ -361,7 +363,7 @@
              <double>10000.000000000000000</double>
             </property>
             <property name="value">
-             <double>100.000000000000000</double>
+             <double>0.000000000000000</double>
             </property>
            </widget>
           </item>
@@ -377,7 +379,7 @@
              <double>100000.000000000000000</double>
             </property>
             <property name="value">
-             <double>100.000000000000000</double>
+             <double>0.000000000000000</double>
             </property>
            </widget>
           </item>
@@ -493,7 +495,7 @@
              <double>100000.000000000000000</double>
             </property>
             <property name="value">
-             <double>20.000000000000000</double>
+             <double>25.000000000000000</double>
             </property>
            </widget>
           </item>
@@ -581,7 +583,7 @@
              <double>100000.000000000000000</double>
             </property>
             <property name="value">
-             <double>20.000000000000000</double>
+             <double>25.000000000000000</double>
             </property>
            </widget>
           </item>
