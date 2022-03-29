@@ -124,9 +124,9 @@ class Visual(QtWidgets.QMainWindow, app.Ui_MainWindow):
 
     def entry_circle(self):
         try:
-            x_center = float(self.lineEditcicX.text())
-            y_center = float(self.lineEditcicY.text())
-            radius =  float(self.lineEditR.text())
+            x_center = float(self.lineEditcicX.value())
+            y_center = float(self.lineEditcicY.value())
+            radius =  float(self.lineEditR.value())
         except: 
             # print(x_center, y_center)
             QtWidgets.QMessageBox.critical(self, "", 
@@ -139,10 +139,10 @@ class Visual(QtWidgets.QMainWindow, app.Ui_MainWindow):
     
     def entry_ellipse(self):
         try:
-            x_center = float(self.lineEditcicX_2.text())
-            y_center = float(self.lineEditcicY_2.text())
-            a = float(self.lineEditA.text())
-            b = float(self.lineEditB.text())
+            x_center = float(self.lineEditcicX_2.value())
+            y_center = float(self.lineEditcicY_2.value())
+            a = float(self.lineEditA.value())
+            b = float(self.lineEditB.value())
             # print(x_center, y_center, a, b)
         except: 
             QtWidgets.QMessageBox.critical(self, "", 
@@ -161,7 +161,6 @@ class Visual(QtWidgets.QMainWindow, app.Ui_MainWindow):
             self.cirlceParam(x_center, y_center, radius, fdraw)
         elif self.radioButtonMidPoint.isChecked():
             self.circleMidPoint(x_center, y_center, radius, fdraw)
-            #self.ellipseMidPoint(x_center, y_center, radius, radius, fdraw)
         elif self.radioButtonCanon.isChecked():
             self.circleCanon(x_center, y_center, radius, fdraw)
         elif self.radioButtonBres.isChecked():
@@ -185,11 +184,11 @@ class Visual(QtWidgets.QMainWindow, app.Ui_MainWindow):
 
     def spectr_circle(self):
         try:
-            x_center = float(self.lineEditcicX.text())
-            y_center = float(self.lineEditcicY.text())
-            start_raduis =  float(self.lineEditStartR.text())
-            step = float(self.lineEditshagR.text())
-            count = int(self.lineEditcount.text())
+            x_center = float(self.lineEditcicX.value())
+            y_center = float(self.lineEditcicY.value())
+            start_raduis =  float(self.lineEditStartR.value())
+            step = float(self.lineEditshagR.value())
+            count = int(self.lineEditcount.value())
         except: 
             QtWidgets.QMessageBox.critical(self, "", 
                     "Координаты и радиус должны быть вещественные числами!"
@@ -210,12 +209,12 @@ class Visual(QtWidgets.QMainWindow, app.Ui_MainWindow):
 
     def spectr_ellipse(self):
         try:
-            x_center = float(self.lineEditcicX_2.text())
-            y_center = float(self.lineEditcicY_2.text())
-            start_a = float(self.lineEditStartR_2.text())
-            start_b = float(self.lineEditEndR_2.text())
-            step = float(self.lineEditshagR_2.text())
-            count = int(self.lineEditcount_2.text())
+            x_center = float(self.lineEditcicX_2.value())
+            y_center = float(self.lineEditcicY_2.value())
+            start_a = float(self.lineEditStartR_2.value())
+            start_b = float(self.lineEditEndR_2.value())
+            step = float(self.lineEditshagR_2.value())
+            count = int(self.lineEditcount_2.value())
         except: 
             QtWidgets.QMessageBox.critical(self, "", 
                     "Координаты и радиус должны быть вещественные числами!"
@@ -355,24 +354,7 @@ class Visual(QtWidgets.QMainWindow, app.Ui_MainWindow):
             for i in range(len(draw)):
                 self.draw_point(draw[i][0], draw[i][1])
         
-            # if d == 0: # точка на окружности => диагональ
-            #     x += 1
-            #     y -= 1
-            #     d += (2 * (x - y + 1)) 
-            # elif d < 0:  # точка лежит внутри окружности
-            #     d1 = d + d + y + y - 1
-            #     x += 1
-            #     if d1 > 0: # диагональ
-            #         y -= 1
-            #         d += (2 * (x - y + 1)) 
-            #     else: # горизонталь
-            #         d += (x + x + 1)  
-            # else: # точка вне окружности (диагональ)
-            #     d1 = d - x + d - x - 1
-            #     y -= 1
-            #     if d1 < 0: # диагональ 
-            #         x += 1
-            #         d += (2 * (x - y + 1))
+            
     
     def ellipseBres(self, x_center, y_center, a, b, fdraw=True):
         # f(x,y)=x^2*b^2+a^2y^2-a^2*b^2=0

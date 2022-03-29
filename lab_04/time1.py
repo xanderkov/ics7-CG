@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 from matplotlib import colors
 from colormap import rgb2hex
 from datetime import datetime
-# from shittyFuncs import niceRound
+
 
 curColorLines = "#000000"
 curColorBackground = "#ffffff"
@@ -242,7 +242,7 @@ def ellipseTimeResearch(canvasWindow):
     i = 1
     prev = 0
 
-    while i <= 10001:
+    while i <= 5001:
         curTime = 0
         for j in range(10):
             timeTempStart = datetime.now()
@@ -250,7 +250,6 @@ def ellipseTimeResearch(canvasWindow):
             timeTempEnd = datetime.now()
             curTime += timeTempEnd.timestamp() - timeTempStart.timestamp()
         if not curTime > prev + 0.015 and not curTime < prev - 0.015:
-            print(1)
             prev = curTime
             curTime /= 10
             masTime.append(curTime)
@@ -262,7 +261,7 @@ def ellipseTimeResearch(canvasWindow):
     i = 1
     prev = 0
 
-    while i <= 10001:
+    while i <= 5001:
         curTime = 0
         for j in range(10):
             timeTempStart = datetime.now()
@@ -270,7 +269,6 @@ def ellipseTimeResearch(canvasWindow):
             timeTempEnd = datetime.now()
             curTime += timeTempEnd.timestamp() - timeTempStart.timestamp()
         if not curTime > prev + 0.015 and not curTime < prev - 0.015:
-            print(2)
             prev = curTime
             curTime /= 10
             masTime.append(curTime)
@@ -282,7 +280,7 @@ def ellipseTimeResearch(canvasWindow):
     i = 1
     prev = 0
 
-    while i <= 10001:
+    while i <= 5001:
         curTime = 0
         for j in range(10):
             timeTempStart = datetime.now()
@@ -290,7 +288,6 @@ def ellipseTimeResearch(canvasWindow):
             timeTempEnd = datetime.now()
             curTime += timeTempEnd.timestamp() - timeTempStart.timestamp()
         if not curTime > prev + 0.015 and not curTime < prev - 0.015:
-            print(3)
             prev = curTime
             curTime /= 10
             masTime.append(curTime)
@@ -302,7 +299,7 @@ def ellipseTimeResearch(canvasWindow):
     i = 1
     prev = 0
 
-    while i <= 10001:
+    while i <= 5001:
         curTime = 0
         for j in range(10):
             timeTempStart = datetime.now()
@@ -310,7 +307,6 @@ def ellipseTimeResearch(canvasWindow):
             timeTempEnd = datetime.now()
             curTime += timeTempEnd.timestamp() - timeTempStart.timestamp()
         if not curTime > prev + 0.015 and not curTime < prev - 0.015:
-            print(4)
             prev = curTime
             curTime /= 10
             masTime.append(curTime)
@@ -321,7 +317,7 @@ def ellipseTimeResearch(canvasWindow):
     fig = plt.figure(figsize = (18, 10))
     plot = fig.add_subplot()
     ran = []
-    for i in range(1, 10002, 250):
+    for i in range(1, 5002, 250):
         ran.append(i)
 
     plot.plot(ran, masAllTime[0], label = "Алгоритм Брезенхема")
@@ -342,7 +338,7 @@ def circleTimeResearch(canvasWindow):
     i = 1
     prev = 0
 
-    while i <= 10001:
+    while i <= 5001:
         curTime = 0
         for j in range(10):
             timeTempStart = datetime.now()
@@ -361,7 +357,7 @@ def circleTimeResearch(canvasWindow):
     i = 1
     prev = 0
 
-    while i <= 10001:
+    while i <= 5001:
         curTime = 0
         for j in range(10):
             timeTempStart = datetime.now()
@@ -380,7 +376,7 @@ def circleTimeResearch(canvasWindow):
     i = 1
     prev = 0
 
-    while i <= 10001:
+    while i <= 5001:
         curTime = 0
         for j in range(10):
             timeTempStart = datetime.now()
@@ -399,7 +395,7 @@ def circleTimeResearch(canvasWindow):
     i = 1
     prev = 0
 
-    while i <= 10001:
+    while i <= 5001:
         curTime = 0
         for j in range(10):
             timeTempStart = datetime.now()
@@ -412,12 +408,12 @@ def circleTimeResearch(canvasWindow):
             masTime.append(curTime)
             i += 250
 
-    masAllTime.append(masTime)
+    masAllTime.append(masTime)  
 
     fig = plt.figure(figsize = (18, 10))
     plot = fig.add_subplot()
     ran = []
-    for i in range(1, 10002, 250):
+    for i in range(1, 5002, 250):
         ran.append(i)
 
     plot.plot(ran, masAllTime[0], label = "Алгоритм Брезенхема")
