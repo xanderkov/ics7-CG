@@ -398,13 +398,13 @@ if __name__ == "__main__":
     y_entry.place(x = CV_WIDE + 390, y = 60)
 
     add_dot_btn = Button(win, text = "Добавить точку", font="-family {Consolas} -size 14", command = lambda: read_dot())
-    add_dot_btn.place(x = CV_WIDE + 20, y = 140)
+    add_dot_btn.place(x = CV_WIDE + 30, y = 100)
 
     del_dot_btn = Button(win, text = "Удалить крайнюю", font="-family {Consolas} -size 14", command = lambda: del_dot())
-    del_dot_btn.place(x = CV_WIDE + 370, y = 140)
+    del_dot_btn.place(x = CV_WIDE + 360, y = 100)
 
     make_figure_btn = Button(win, text = "Замкнуть фигуру", font="-family {Consolas} -size 14", command = lambda: make_figure())
-    make_figure_btn.place(x = CV_WIDE + 190, y = 140)
+    make_figure_btn.place(x = CV_WIDE + 190, y = 130)
 
 
     # Dots list
@@ -416,7 +416,7 @@ if __name__ == "__main__":
     back_box.place(x = CV_WIDE + 20, y = 200)
 
     dots_list_text = Label(win, text = "Список точек", width = 43, font="-family {Consolas} -size 16", bg = MAIN_TEXT_COLOR)
-    dots_list_text.place(x = CV_WIDE + 20, y = 180)
+    dots_list_text.place(x = CV_WIDE + 20, y = 170)
 
     dotslist_box = Listbox(bg = "white")
     dotslist_box.configure(height = 7, width = 45)
@@ -445,7 +445,7 @@ if __name__ == "__main__":
 
     # Time and clear
 
-    time_label = Label(text = "Время: %-3.2f с" %(0), font="-family {Consolas} -size 16", bg = "lightgrey")
+    time_label = Label(text = "Время: %-3.2f с" %(0), font="-family {Consolas} -size 16", bg = "white")
     time_label.place(x = 20, y = CV_HEIGHT - 50)
 
     clear_win_btn = Button(win, width = 42, height = 2, text = "Очистить экран", font="-family {Consolas} -size 14", command = lambda: reboot_prog())
@@ -467,16 +467,16 @@ if __name__ == "__main__":
     option_color.set(1)
 
     color_orange = Radiobutton(text = "Оранжевый", font="-family {Consolas} -size 14", variable = option_color, value = 1, bg = BOX_COLOR, activebackground = BOX_COLOR, highlightbackground = BOX_COLOR)
-    color_orange.place(x = CV_WIDE + 25, y = WIN_HEIGHT - 140)
+    color_orange.place(x = CV_WIDE + 25, y = WIN_HEIGHT - 150)
 
     color_red = Radiobutton(text = "Красный", font="-family {Consolas} -size 14", variable = option_color, value = 2, bg = BOX_COLOR, activebackground = BOX_COLOR, highlightbackground = BOX_COLOR)
-    color_red.place(x = CV_WIDE + 400, y = WIN_HEIGHT - 140)
+    color_red.place(x = CV_WIDE + 400, y = WIN_HEIGHT - 150)
 
     color_blue = Radiobutton(text = "Синий", font="-family {Consolas} -size 14", variable = option_color, value = 3, bg = BOX_COLOR, activebackground = BOX_COLOR, highlightbackground = BOX_COLOR)
-    color_blue.place(x = CV_WIDE + 25, y = WIN_HEIGHT - 100)
+    color_blue.place(x = CV_WIDE + 25, y = WIN_HEIGHT - 110)
 
     color_green = Radiobutton(text = "Зеленый", font="-family {Consolas} -size 14", variable = option_color, value = 4, bg = BOX_COLOR, activebackground = BOX_COLOR, highlightbackground = BOX_COLOR)
-    color_green.place(x = CV_WIDE + 400, y = WIN_HEIGHT - 100)
+    color_green.place(x = CV_WIDE + 400, y = WIN_HEIGHT - 110)
 
 
 
