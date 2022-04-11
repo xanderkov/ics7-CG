@@ -54,56 +54,13 @@ def sign(difference):
         return 1
 
 
-def bresenham_int(p1, p2, color):
+def draw_line(p1, p2, color):
     x1 = p1[0]
     y1 = p1[1]
     x2 = p2[0]
     y2 = p2[1]
 
-    if (x2 - x1 == 0) and (y2 - y1 == 0):
-        return [[x1, y1, color]]
-
-    x = x1
-    y = y1
-
-    dx = abs(x2 - x1)
-    dy = abs(y2 - y1)
-
-    s1 = sign(x2 - x1)
-    s2 = sign(y2 - y1)
-
-    if (dy > dx):
-        tmp = dx
-        dx = dy
-        dy = tmp
-        swaped = 1
-    else:
-        swaped = 0
-
-    e = 2 * dy - dx
-
-    i = 1
-
-    while (i <= dx + 1):
-
-        draw_dot(x, y, color)
-
-        while (e >= 0):
-            if (swaped):
-                x = x + s1
-            else:
-                y = y + s2
-
-            e = e - 2 * dx
-
-        if (swaped):
-            y = y + s2
-        else:
-            x = x + s1
-
-        e = e + 2 * dy
-
-        i += 1
+    canvas_win.create_line(x1, y1, x2, y2, fill=color)
 
 
 def read_dot():
@@ -135,8 +92,8 @@ def add_dot(x, y, last = True):
 
     if (len(dots[cur_figure]) > 1):
         sides_list[cur_figure].append([dots[cur_figure][cur_dot - 1], dots[cur_figure][cur_dot]])
-
-        bresenham_int(dots[cur_figure][cur_dot - 1], dots[cur_figure][cur_dot], COLOR_LINE)
+        
+        draw_line(dots[cur_figure][cur_dot - 1], dots[cur_figure][cur_dot], COLOR_LINE)
         
 
 def del_dot():
@@ -148,7 +105,8 @@ def del_dot():
 
     if (len(dots[cur_figure]) > 1):
         sides_list[cur_figure].pop()
-        bresenham_int(dots[cur_figure][cur_dot - 1], dots[cur_figure][cur_dot], "white")
+        
+        draw_line(dots[cur_figure][cur_dot - 1], dots[cur_figure][cur_dot], "white")
 
     # Find index for a table
 
@@ -319,7 +277,8 @@ def fill_with_sides_and_flag(sides_list, block_edges, color_fill, delay = False)
     # Sides
     for fig in sides_list:
         for side in fig:
-            bresenham_int(side[0], side[1], COLOR_LINE)
+            
+            draw_line(side[0], side[1], COLOR_LINE)
 
     time_label = Label(text = "Время: %-3.2f с" %(end_time - start_time), font="-family {Consolas} -size 16", bg = "lightgrey")
     time_label.place(x = 20, y = CV_HEIGHT - 50)
