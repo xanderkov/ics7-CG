@@ -5,6 +5,7 @@ from math import sqrt, acos, degrees, pi, sin, cos, radians, floor, fabs
 import copy
 import numpy as np
 import matplotlib.pyplot as plt
+import keyboard
 
 from time import time, sleep
 
@@ -77,6 +78,27 @@ def read_dot():
 def add_dot_click(event):
     x = event.x
     y = event.y
+   
+
+    add_dot(x, y)
+
+def add_dot_hor_click(event):
+    x = event.x
+    y = event.y
+    cur_figure = len(dots) - 1
+    if (len(dots[cur_figure]) > 0):
+        cur_dot = len(dots[cur_figure]) - 1
+        y = dots[cur_figure][cur_dot][1]
+
+    add_dot(x, y)
+
+def add_dot_vert_click(event):
+    x = event.x
+    y = event.y
+    cur_figure = len(dots) - 1
+    if (len(dots[cur_figure]) > 0):
+        cur_dot = len(dots[cur_figure]) - 1
+        x = dots[cur_figure][cur_dot][0]
 
     add_dot(x, y)
 
@@ -270,7 +292,7 @@ def fill_with_sides_and_flag(sides_list, block_edges, color_fill, delay = False)
 
         if delay:
             canvas_win.update()
-            sleep(0.001 * 1)
+            sleep(0.0001 * 1)
 
     end_time = time()
 
@@ -413,7 +435,8 @@ if __name__ == "__main__":
     # Binds
 
     canvas_win.bind("<1>", add_dot_click)
-
+    canvas_win.bind("<3>", add_dot_hor_click)
+    canvas_win.bind("<2>", add_dot_vert_click)
     # TODO Choose color 
 
     back_box_filling = Label(text = "", font="-family {Consolas} -size 16", width = 43, height = 5, bg = BOX_COLOR)
