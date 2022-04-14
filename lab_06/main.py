@@ -9,7 +9,6 @@ import keyboard
 
 from time import time, sleep
 
-import colorutils as cu
 
 
 WIN_WIDTH = 1300
@@ -27,8 +26,8 @@ TEMP_SIDE_COLOR = "#ff00ff"
 
 BOX_COLOR = "white"
 
-COLOR_LINE = "black" #(0, 0, 0) # black
-COLOR_LINE_CHECK = (0, 0, 0)
+COLOR_LINE = "#000002" #(0, 0, 0) # black
+COLOR_LINE_CHECK = (0, 0, 2)
 
 FILL_COLOR = "#ff6e41"
 
@@ -42,8 +41,11 @@ def clear_canvas():
 
 
 def draw_dot(x, y, color):
+    # canvas_win.create_line(x, y, x + 1, y, fill = color)
     image_canvas.put(color, (x, y))
     
+    # for dot in dots:
+    #     canvas_win.create_line(dot[0], dot[1], dot[0] + 1, dot[1], fill = dot[2].hex)
 
 
 def sign(difference):
@@ -55,13 +57,59 @@ def sign(difference):
         return 1
 
 
-def draw_line(p1, p2, color):
+def bresenham_int(p1, p2, color):
     x1 = p1[0]
     y1 = p1[1]
     x2 = p2[0]
     y2 = p2[1]
 
-    canvas_win.create_line(x1, y1, x2, y2, fill=color)
+    if (x2 - x1 == 0) and (y2 - y1 == 0):
+        return [[x1, y1, color]]
+
+    x = x1
+    y = y1
+
+    dx = abs(x2 - x1)
+    dy = abs(y2 - y1)
+
+    s1 = sign(x2 - x1)
+    s2 = sign(y2 - y1)
+
+    if (dy > dx):
+        tmp = dx
+        dx = dy
+        dy = tmp
+        swaped = 1
+    else:
+        swaped = 0
+
+    e = 2 * dy - dx
+
+    i = 1
+
+    while (i <= dx + 1):
+
+        draw_dot(x, y, color)
+
+        # dot = [x, y, color]
+        # dots.append(dot)
+
+        while (e >= 0):
+            if (swaped):
+                x = x + s1
+            else:
+                y = y + s2
+
+            e = e - 2 * dx
+
+        if (swaped):
+            y = y + s2
+        else:
+            x = x + s1
+
+        e = e + 2 * dy
+
+        i += 1
 
 
 def read_dot():
@@ -78,29 +126,23 @@ def read_dot():
 def add_dot_click(event):
     x = event.x
     y = event.y
-   
 
     add_dot(x, y)
 
-def add_dot_hor_click(event):
+
+def add_seed_dot_click(event):
+    global seed_dot
+
     x = event.x
     y = event.y
-    cur_figure = len(dots) - 1
-    if (len(dots[cur_figure]) > 0):
-        cur_dot = len(dots[cur_figure]) - 1
-        y = dots[cur_figure][cur_dot][1]
 
-    add_dot(x, y)
+    seed_dot = [x, y]
 
-def add_dot_vert_click(event):
-    x = event.x
-    y = event.y
-    cur_figure = len(dots) - 1
-    if (len(dots[cur_figure]) > 0):
-        cur_dot = len(dots[cur_figure]) - 1
-        x = dots[cur_figure][cur_dot][0]
+    x_seed_entry.delete(0, END)
+    x_seed_entry.insert(END, "%d" %(x))
+    y_seed_entry.delete(0, END)
+    y_seed_entry.insert(END, "%d" %(y))
 
-    add_dot(x, y)
 
 
 def add_dot(x, y, last = True):
@@ -113,9 +155,7 @@ def add_dot(x, y, last = True):
         dotslist_box.insert(END, "%d. (%4d;%4d)" %(cur_dot + 1, x, y))
 
     if (len(dots[cur_figure]) > 1):
-        sides_list[cur_figure].append([dots[cur_figure][cur_dot - 1], dots[cur_figure][cur_dot]])
-        
-        draw_line(dots[cur_figure][cur_dot - 1], dots[cur_figure][cur_dot], COLOR_LINE)
+        bresenham_int(dots[cur_figure][cur_dot - 1], dots[cur_figure][cur_dot], COLOR_LINE)
         
 
 def del_dot():
@@ -126,16 +166,14 @@ def del_dot():
         return
 
     if (len(dots[cur_figure]) > 1):
-        sides_list[cur_figure].pop()
-        
-        draw_line(dots[cur_figure][cur_dot - 1], dots[cur_figure][cur_dot], "white")
+        bresenham_int(dots[cur_figure][cur_dot - 1], dots[cur_figure][cur_dot], "white")
 
     # Find index for a table
 
     index = 0
 
     for i in range(cur_figure + 1):
-        index += (len(dots[i]))
+        index += len(dots[i])
 
     #index += cur_figure
 
@@ -155,94 +193,25 @@ def make_figure():
     add_dot(dots[cur_figure - 1][0][0], dots[cur_figure - 1][0][1], last = False)
 
     dots.append(list())
-    sides_list.append(list())
 
     dotslist_box.insert(END, "_______________________")
 
 
-def line_koefs(x1, y1, x2, y2):
-    a = y1 - y2
-    b = x2 - x1
-    c = x1*y2 - x2*y1
-
-    return a, b, c
+def get_fill_check_color(collor_fill):
+    return (int(collor_fill[1:3], 16), int(collor_fill[3:5], 16), int(collor_fill[5:7], 16))
 
 
-def solve_lines_intersection(a1, b1, c1, a2, b2, c2):
-    opr = a1*b2 - a2*b1
-    opr1 = (-c1)*b2 - b1*(-c2)
-    opr2 = a1*(-c2) - (-c1)*a2
+def add_seed_dot():
+    global seed_dot
 
-    x = opr1 / opr
-    y = opr2 / opr
-
-    return x, y
-
-
-def round_side(dot1, dot2):
-    if (dot1[1] == dot2[1]):
+    try:
+        x = float(x_seed_entry.get())
+        y = float(y_seed_entry.get())
+    except:
+        messagebox.showerror("Ошибка", "Неверно введены координаты точки")
         return
 
-    a_side, b_side, c_side = line_koefs(dot1[0], dot1[1], dot2[0], dot2[1])
-
-    if (dot1[1] > dot2[1]):
-        y_max = dot1[1]
-        y_min = dot2[1]
-        x = dot2[0]
-    else:
-        y_max = dot2[1]
-        y_min = dot1[1]
-        x = dot1[0]
-
-    y = y_min
-
-    while (y < y_max):
-        a_scan_line, b_scan_line, c_scan_line = line_koefs(x, y, x + 1, y)
-
-        x_intersec, y_intersec = solve_lines_intersection(a_side, b_side, c_side, a_scan_line, b_scan_line, c_scan_line)  
-
-        if (image_canvas.get(int(x_intersec) + 1, y) != TEMP_SIDE_COLOR_CHECK):
-            image_canvas.put(TEMP_SIDE_COLOR, (int(x_intersec) + 1, y))
-        else:
-            image_canvas.put(TEMP_SIDE_COLOR, (int(x_intersec) + 2, y))
-
-        y += 1
-
-        canvas_win.update()
-
-
-def round_figure():
-    for figure in range(len(sides_list)):
-        sides_num = len(sides_list[figure]) - 1
-
-        for side in range(sides_num + 1):
-            round_side(sides_list[figure][side][0], sides_list[figure][side][1])
-
-
-def get_edges(dots):
-    x_max = 0
-    x_min = CV_WIDE
-
-    y_max = CV_HEIGHT
-    y_min = 0
-
-    for figure in dots:
-        for dot in figure:
-            if (dot[0] > x_max):
-                x_max = dot[0]
-            
-            if (dot[0] < x_min):
-                x_min = dot[0]
-
-            if (dot[1] < y_max):
-                y_max = dot[1]
-            
-            if (dot[1] > y_min):
-                y_min = dot[1]
-
-    block_edges = (x_min, y_min, x_max, y_max)
-
-    return block_edges
+    seed_dot = [x, y]
 
 
 def parse_fill():
@@ -253,7 +222,9 @@ def parse_fill():
         messagebox.showerror("Ошибка", "Крайняя фигура не замкнута")
         return
 
-    block_edges = get_edges(dots)
+    if (len(seed_dot) == 0):
+        messagebox.showerror("Ошибка", "Затравочный пиксель не установлен")
+        return
 
     if (option_filling.get() == 1):
         delay = True
@@ -262,45 +233,129 @@ def parse_fill():
 
     color_fill = parse_color(option_color.get())
 
-    fill_with_sides_and_flag(sides_list, block_edges, color_fill, delay = delay)
+    fill_with_seed(seed_dot, color_fill, delay = delay)
 
 
-def fill_with_sides_and_flag(sides_list, block_edges, color_fill, delay = False):
-    round_figure()
-    canvas_win.update()
 
-    x_max = block_edges[2]
-    x_min = block_edges[0]
-
-    y_max = block_edges[3]
-    y_min = block_edges[1]    
+def fill_with_seed(dot_seed, color_fill, delay = False):
+    
+    color_fill_check = get_fill_check_color(color_fill)
 
     start_time = time()
 
-    for y in range(y_min, y_max - 1, -1):
-        flag = False
+    stack = list()
+    stack.append(dot_seed)
 
-        for x in range(x_min, x_max + 2):
+    while (stack):
 
-            if (image_canvas.get(x, y) == TEMP_SIDE_COLOR_CHECK):
-                flag = not flag
+        dot_seed = stack.pop()
 
-            if flag:
-                image_canvas.put(color_fill, (x, y))
-            else:
-                image_canvas.put(CV_COLOR, (x, y))
+        x = dot_seed[0]
+        y = dot_seed[1]
 
-        if delay:
+        image_canvas.put(color_fill, (x, y))
+
+        tmp_x = x
+        tmp_y = y
+
+        # Заполнение текущей строки право до ребра или уже закрашенного пикселя
+        x = x + 1
+
+        while (image_canvas.get(x, y) != COLOR_LINE_CHECK 
+                and image_canvas.get(x, y) != color_fill_check):
+            image_canvas.put(color_fill, (x, y))
+            x = x + 1
+
+        x_right = x - 1
+
+
+        # Заполнение текущей строки влево до ребра или уже закрашенного пикселя
+        x = tmp_x - 1
+
+        while (image_canvas.get(x, y) != COLOR_LINE_CHECK 
+                and image_canvas.get(x, y) != color_fill_check):
+            image_canvas.put(color_fill, (x, y))
+            x = x - 1
+
+        x_left = x + 1
+
+        # Сканирование верхней строки
+        x = x_left
+
+        y = tmp_y + 1
+
+        while (x <= x_right):
+            flag = False
+
+            # Поиск, есть ли в строке незакрашенный пиксель
+            while (image_canvas.get(x, y) != COLOR_LINE_CHECK 
+                    and image_canvas.get(x, y) != color_fill_check 
+                    and x <= x_right):
+                flag = True
+
+                x = x + 1
+
+            if (flag == True):
+                if (x == x_right 
+                        and image_canvas.get(x, y) != COLOR_LINE_CHECK
+                        and image_canvas.get(x, y) != color_fill_check):
+                    stack.append([x, y])
+                else:
+                    stack.append([x - 1, y])
+            
+                flag = False
+
+            x_begin = x
+
+            while ((image_canvas.get(x, y) == COLOR_LINE_CHECK 
+                    or image_canvas.get(x, y) == color_fill_check) 
+                    and x < x_right):
+                x = x + 1
+
+            if (x == x_begin):
+                x = x + 1
+
+        # Сканирование нижней строки
+        x = x_left
+
+        y = tmp_y - 1
+
+        while (x <= x_right):
+            flag = False    
+
+            # Поиск, есть ли в строке незакрашенный пиксель
+            while (image_canvas.get(x, y) != COLOR_LINE_CHECK 
+                    and image_canvas.get(x, y) != color_fill_check 
+                    and x <= x_right):
+                flag = True
+
+                x = x + 1
+
+            if (flag == True):
+                if (x == x_right 
+                        and image_canvas.get(x, y) != COLOR_LINE_CHECK 
+                        and image_canvas.get(x, y) != color_fill_check):
+                    stack.append([x, y])
+                else:
+                    stack.append([x - 1, y])
+
+                flag = False
+
+            x_begin = x
+
+            while ((image_canvas.get(x, y) == COLOR_LINE_CHECK 
+                    or image_canvas.get(x, y) == color_fill_check) 
+                    and x < x_right):
+                x = x + 1
+
+            if (x == x_begin):
+                x = x + 1
+
+        if (delay):
+            sleep(0.001)
             canvas_win.update()
-            sleep(0.0001 * 1)
 
     end_time = time()
-
-    # Sides
-    for fig in sides_list:
-        for side in fig:
-            
-            draw_line(side[0], side[1], COLOR_LINE)
 
     time_label = Label(text = "Время: %-3.2f с" %(end_time - start_time), font="-family {Consolas} -size 16", bg = "lightgrey")
     time_label.place(x = 20, y = CV_HEIGHT - 50)
@@ -360,32 +415,29 @@ if __name__ == "__main__":
 
     # Add dot
 
-    back_box = Label(text = "", font="-family {Consolas} -size 16", width = 43, height = 3, bg = BOX_COLOR)
-    back_box.place(x = CV_WIDE + 20, y = 30)
-
     add_dot_text = Label(win, text = "Добавить точку", width = 43, font="-family {Consolas} -size 16", bg = MAIN_TEXT_COLOR)
-    add_dot_text.place(x = CV_WIDE + 20, y = 30)
+    add_dot_text.place(x = CV_WIDE + 20, y = 10)
 
     x_text = Label(text = "x: ", font="-family {Consolas} -size 14", bg = BOX_COLOR)
-    x_text.place(x = CV_WIDE + 70, y = 60)
+    x_text.place(x = CV_WIDE + 70, y = 40)
 
     x_entry = Entry(font="-family {Consolas} -size 14", width = 9)
-    x_entry.place(x = CV_WIDE + 130, y = 60)
+    x_entry.place(x = CV_WIDE + 130, y = 40)
 
     y_text = Label(text = "y: ", font="-family {Consolas} -size 14", bg = BOX_COLOR)
-    y_text.place(x = CV_WIDE + 330, y = 60)
+    y_text.place(x = CV_WIDE + 330, y = 40)
 
     y_entry = Entry(font="-family {Consolas} -size 14", width = 9)
-    y_entry.place(x = CV_WIDE + 390, y = 60)
+    y_entry.place(x = CV_WIDE + 390, y = 40)
 
     add_dot_btn = Button(win, text = "Добавить точку", font="-family {Consolas} -size 14", command = lambda: read_dot())
-    add_dot_btn.place(x = CV_WIDE + 30, y = 100)
+    add_dot_btn.place(x = CV_WIDE + 30, y = 70)
 
     del_dot_btn = Button(win, text = "Удалить крайнюю", font="-family {Consolas} -size 14", command = lambda: del_dot())
-    del_dot_btn.place(x = CV_WIDE + 360, y = 100)
+    del_dot_btn.place(x = CV_WIDE + 360, y = 70)
 
     make_figure_btn = Button(win, text = "Замкнуть фигуру", font="-family {Consolas} -size 14", command = lambda: make_figure())
-    make_figure_btn.place(x = CV_WIDE + 190, y = 130)
+    make_figure_btn.place(x = CV_WIDE + 190, y = 90)
 
 
     # Dots list
@@ -397,68 +449,84 @@ if __name__ == "__main__":
     back_box.place(x = CV_WIDE + 20, y = 200)
 
     dots_list_text = Label(win, text = "Список точек", width = 43, font="-family {Consolas} -size 16", bg = MAIN_TEXT_COLOR)
-    dots_list_text.place(x = CV_WIDE + 20, y = 170)
+    dots_list_text.place(x = CV_WIDE + 20, y = 130)
 
     dotslist_box = Listbox(bg = "white")
     dotslist_box.configure(height = 7, width = 45)
     dotslist_box.configure(font="-family {Consolas} -size 14")
-    dotslist_box.place(x = CV_WIDE + 55, y = 220)
+    dotslist_box.place(x = CV_WIDE + 55, y = 160)
 
+    # Add seed dot
+    
+    back_box = Label(text = "", font="-family {Consolas} -size 16", width = 43, height = 3, bg = BOX_COLOR)
+    back_box.place(x = CV_WIDE + 20, y = 310)
+
+    add_seed_dot_text = Label(win, text = "Установить затравочный пиксель", width = 43, font="-family {Consolas} -size 16", bg = MAIN_TEXT_COLOR)
+    add_seed_dot_text.place(x = CV_WIDE + 20, y = 310)
+
+    x_seed_text = Label(text = "x: ", font="-family {Consolas} -size 14", bg = BOX_COLOR)
+    x_seed_text.place(x = CV_WIDE + 70, y = 340)
+
+    x_seed_entry = Entry(font="-family {Consolas} -size 14", width = 9)
+    x_seed_entry.place(x = CV_WIDE + 130, y = 340)
+
+    y_seed_text = Label(text = "y: ", font="-family {Consolas} -size 14", bg = BOX_COLOR)
+    y_seed_text.place(x = CV_WIDE + 330, y = 340)
+
+    y_seed_entry = Entry(font="-family {Consolas} -size 14", width = 9)
+    y_seed_entry.place(x = CV_WIDE + 390, y = 340)
+
+    add_seed_dot_btn = Button(win, text = "Установить затравочный пиксель", font="-family {Consolas} -size 14", command = lambda: read_dot())
+    add_seed_dot_btn.place(x = CV_WIDE + 130, y = WIN_HEIGHT - 310)
+    
     # Fill figure
 
-    back_box_filling = Label(text = "", font="-family {Consolas} -size 16", width = 43, height = 3, bg = BOX_COLOR)
-    back_box_filling.place(x = CV_WIDE + 20, y = 390)
-
     color_text = Label(win, text = "Выбрать тип закраски", width = 43, font="-family {Consolas} -size 16", bg = MAIN_TEXT_COLOR)
-    color_text.place(x = CV_WIDE + 20, y = 390)
+    color_text.place(x = CV_WIDE + 20, y = WIN_HEIGHT - 270)
 
     option_filling = IntVar()
     option_filling.set(1)
 
     draw_delay = Radiobutton(text = "С задержкой", font="-family {Consolas} -size 14", variable = option_filling, value = 1, bg = BOX_COLOR, activebackground = BOX_COLOR, highlightbackground = BOX_COLOR)
-    draw_delay.place(x = CV_WIDE + 25, y = 420)
+    draw_delay.place(x = CV_WIDE + 25, y = WIN_HEIGHT - 240)
 
     draw_without_delay = Radiobutton(text = "Без задержки", font="-family {Consolas} -size 14", variable = option_filling, value = 2, bg = BOX_COLOR, activebackground = BOX_COLOR, highlightbackground = BOX_COLOR)
-    draw_without_delay.place(x = CV_WIDE + 350, y = 420)
+    draw_without_delay.place(x = CV_WIDE + 350, y = WIN_HEIGHT - 240)
 
     fill_figure_btn = Button(win, text = "Закрасить выбранную область", font="-family {Consolas} -size 14", command = lambda: parse_fill())
-    fill_figure_btn.place(x = CV_WIDE + 150, y = 450)
+    fill_figure_btn.place(x = CV_WIDE + 150, y = WIN_HEIGHT - 200)
 
     # Time and clear
 
     time_label = Label(text = "Время: %-3.2f с" %(0), font="-family {Consolas} -size 16", bg = "white")
     time_label.place(x = 20, y = CV_HEIGHT - 50)
 
-    clear_win_btn = Button(win, width = 42, height = 2, text = "Очистить экран", font="-family {Consolas} -size 14", command = lambda: reboot_prog())
-    clear_win_btn.place(x = CV_WIDE + 50, y = WIN_HEIGHT - 70)
+    clear_win_btn = Button(win, width = 42, height = 1, text = "Очистить экран", font="-family {Consolas} -size 14", command = lambda: reboot_prog())
+    clear_win_btn.place(x = CV_WIDE + 50, y = WIN_HEIGHT - 40)
 
     # Binds
 
     canvas_win.bind("<1>", add_dot_click)
-    canvas_win.bind("<3>", add_dot_hor_click)
-    canvas_win.bind("<2>", add_dot_vert_click)
-    # TODO Choose color 
-
-    back_box_filling = Label(text = "", font="-family {Consolas} -size 16", width = 43, height = 5, bg = BOX_COLOR)
-    back_box_filling.place(x = CV_WIDE + 20, y =  WIN_HEIGHT - 200)
+    canvas_win.bind("<3>", add_seed_dot_click)
+    # TODO Choose color
 
     color_text = Label(win, text = "Выбрать цвет заполнения", width = 43, font="-family {Consolas} -size 16", bg = MAIN_TEXT_COLOR)
-    color_text.place(x = CV_WIDE + 20, y = WIN_HEIGHT - 180)
+    color_text.place(x = CV_WIDE + 20, y = WIN_HEIGHT - 150)
 
     option_color = IntVar()
     option_color.set(1)
 
     color_orange = Radiobutton(text = "Оранжевый", font="-family {Consolas} -size 14", variable = option_color, value = 1, bg = BOX_COLOR, activebackground = BOX_COLOR, highlightbackground = BOX_COLOR)
-    color_orange.place(x = CV_WIDE + 25, y = WIN_HEIGHT - 150)
+    color_orange.place(x = CV_WIDE + 25, y = WIN_HEIGHT - 120)
 
     color_red = Radiobutton(text = "Красный", font="-family {Consolas} -size 14", variable = option_color, value = 2, bg = BOX_COLOR, activebackground = BOX_COLOR, highlightbackground = BOX_COLOR)
-    color_red.place(x = CV_WIDE + 400, y = WIN_HEIGHT - 150)
+    color_red.place(x = CV_WIDE + 400, y = WIN_HEIGHT - 120)
 
     color_blue = Radiobutton(text = "Синий", font="-family {Consolas} -size 14", variable = option_color, value = 3, bg = BOX_COLOR, activebackground = BOX_COLOR, highlightbackground = BOX_COLOR)
-    color_blue.place(x = CV_WIDE + 25, y = WIN_HEIGHT - 110)
+    color_blue.place(x = CV_WIDE + 25, y = WIN_HEIGHT - 80)
 
     color_green = Radiobutton(text = "Зеленый", font="-family {Consolas} -size 14", variable = option_color, value = 4, bg = BOX_COLOR, activebackground = BOX_COLOR, highlightbackground = BOX_COLOR)
-    color_green.place(x = CV_WIDE + 400, y = WIN_HEIGHT - 110)
+    color_green.place(x = CV_WIDE + 400, y = WIN_HEIGHT - 80)
 
 
 
