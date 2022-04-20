@@ -348,7 +348,7 @@ if __name__ == "__main__":
     win = Tk()
     win['bg'] = WIN_COLOR
     win.geometry("%dx%d" %(WIN_WIDTH, WIN_HEIGHT))
-    win.title("Лабораторная работа #5")
+    win.title("Лабораторная работа #5 - алгоритм закраски с флагом")
     win.resizable(False, False)
 
     canvas_win = Canvas(win, width = CV_WIDE, height = CV_HEIGHT, bg = CV_COLOR)
@@ -363,6 +363,9 @@ if __name__ == "__main__":
     back_box = Label(text = "", font="-family {Consolas} -size 16", width = 43, height = 3, bg = BOX_COLOR)
     back_box.place(x = CV_WIDE + 20, y = 30)
 
+    add_dot_text = Label(win, text = "ПКМ - горизонтальная, ЦКМ(колесико) - вертикальная", width = 60, font="-family {Consolas} -size 12", bg = MAIN_TEXT_COLOR)
+    add_dot_text.place(x = CV_WIDE + 10, y = 7)
+    
     add_dot_text = Label(win, text = "Добавить точку", width = 43, font="-family {Consolas} -size 16", bg = MAIN_TEXT_COLOR)
     add_dot_text.place(x = CV_WIDE + 20, y = 30)
 
@@ -429,7 +432,7 @@ if __name__ == "__main__":
     time_label = Label(text = "Время: %-3.2f с" %(0), font="-family {Consolas} -size 16", bg = "white")
     time_label.place(x = 20, y = CV_HEIGHT - 50)
 
-    clear_win_btn = Button(win, width = 42, height = 2, text = "Очистить экран", font="-family {Consolas} -size 14", command = lambda: reboot_prog())
+    clear_win_btn = Button(win, width = 42, text = "Очистить экран", font="-family {Consolas} -size 14", command = lambda: reboot_prog())
     clear_win_btn.place(x = CV_WIDE + 50, y = WIN_HEIGHT - 70)
 
     # Binds
