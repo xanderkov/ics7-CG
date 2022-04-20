@@ -14,10 +14,10 @@ class Window(QtWidgets.QMainWindow):
     def __init__(self):
         QtWidgets.QWidget.__init__(self)
         uic.loadUi("window7.ui", self)
-        self.scene = Scene(0, 0, 880, 700)
+        self.scene = Scene(0, 0, 850, 670)
         self.scene.win = self
         self.view.setScene(self.scene)
-        self.image = QImage(880, 700, QImage.Format_ARGB32_Premultiplied)
+        self.image = QImage(850, 670, QImage.Format_ARGB32_Premultiplied)
         self.image.fill(Qt.white)
         self.sections.clicked.connect(lambda : set_sections(self))
         self.clean.clicked.connect(lambda: clean_all(self))
