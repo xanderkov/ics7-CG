@@ -85,10 +85,10 @@
    <widget class="QGraphicsView" name="graph">
     <property name="geometry">
      <rect>
-      <x>560</x>
-      <y>10</y>
-      <width>801</width>
-      <height>381</height>
+      <x>550</x>
+      <y>0</y>
+      <width>800</width>
+      <height>700</height>
      </rect>
     </property>
    </widget>

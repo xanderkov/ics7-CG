@@ -64,11 +64,11 @@ class MyWindow(QtWidgets.QMainWindow, design.Ui_MainWindow):
         self.segment_prev = None
 
         # создание сцены
-        self.scene = myScene(0, 0, 1600, 1100)
+        self.scene = myScene(0, 0, 760, 660)
         self.scene.win = self
         self.graph.setScene(self.scene)
         # изображение
-        self.image = QImage(1600, 1100, QImage.Format_ARGB32_Premultiplied)
+        self.image = QImage(760, 660, QImage.Format_ARGB32_Premultiplied)
         self.image.fill(self.color_back)
 
     # обработка ошибки
