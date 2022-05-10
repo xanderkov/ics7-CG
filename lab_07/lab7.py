@@ -42,13 +42,13 @@ class Scene(QtWidgets.QGraphicsScene):
         global w
         if not w.input_rect:
             return
-
         if w.cutter is None:
             w.cutter = event.scenePos()
         else:
             self.removeItem(self.itemAt(w.cutter, QTransform()))
             p = event.scenePos()
             self.addRect(w.cutter.x(), w.cutter.y(), abs(w.cutter.x() - p.x()), abs(w.cutter.y() - p.y()))
+            
 
 def set_sections(win):
     if win.input_sections:
@@ -111,6 +111,7 @@ def clean_all(win):
     win.lines = []
     win.image.fill(Qt.white)
     row_count = win.table.rowCount()
+    w.cutter = None
     for i in range(row_count, -1, -1):
         win.table.removeRow(i)
 
