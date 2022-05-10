@@ -1,5 +1,4 @@
-import design  # мой интерфейс
-from PyQt5 import QtWidgets
+from PyQt5 import QtWidgets, uic
 from PyQt5.QtWidgets import QTableWidgetItem
 from PyQt5.QtGui import QPen, QImage, QPixmap, QPainter, QBrush, QPolygon
 from PyQt5.QtCore import Qt, QPoint
@@ -40,12 +39,12 @@ class myScene(QtWidgets.QGraphicsScene):
             w.add_cutter_point(point)
 
 
-class MyWindow(QtWidgets.QMainWindow, design.Ui_MainWindow):
+class MyWindow(QtWidgets.QMainWindow):
     def __init__(self):
         # для доступа к переменным, методам и т.д. в файле design.py
         super().__init__()
         # инициализация дизайна
-        self.setupUi(self)
+        uic.loadUi("design.ui", self)
         # настройка кнопок
         self.but_clean.clicked.connect(self.on_bt_clean_clicked)
         self.but_connect.clicked.connect(self.on_bt_connect_clicked)
