@@ -1,6 +1,6 @@
 from PyQt5 import QtWidgets, uic
 from PyQt5.QtWidgets import QTableWidgetItem
-from PyQt5.QtGui import QPen, QImage, QPixmap, QPainter, QBrush, QPolygon
+from PyQt5.QtGui import QPen, QImage, QPixmap, QPainter, QPolygon
 from PyQt5.QtCore import Qt, QPoint
 from kb_cut import *
 import sys
