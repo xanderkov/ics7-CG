@@ -256,8 +256,15 @@ class MyWindow(QtWidgets.QMainWindow):
 
     # замыкание контура отсекателя
     def on_bt_connect_clicked(self):
+        
+        num = self.table_cutter.rowCount() - 1
+        print(num)
+        x = int(self.table_cutter.item(num, 0).text())
+        y = int(self.table_cutter.item(num, 1).text())
         if not self.cutter_points:
             self.handle_error("Ошибка", "Не было введено ни одной точки отсекателя")
+        elif self.cutter_points[0][0] == x and self.cutter_points[0][1] == y:
+            self.handle_error("Ошибка", "Отсекатель уже замкнут")
         else:
             self.add_cutter_point(self.cutter_points[0])
 
