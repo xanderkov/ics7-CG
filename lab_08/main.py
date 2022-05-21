@@ -101,8 +101,21 @@ class MyWindow(QtWidgets.QMainWindow):
         self.segment_prev = None
         self.direction = 0
     
+    
     def on_bt_parallel_clicked(self):
-        print("Жопа")
+        num = self.table_cutter.currentRow()
+        if (num == -1):
+            self.handle_error('Ошибка.', 'Не выбрана сторона отсекателя в таблице')
+            return;
+    
+        x1 = float(self.table_cutter.item(num, 0).text())
+        y1 = float(self.table_cutter.item(num, 1).text())
+        num += 1
+        if (num  > self.table_cutter.rowCount()):
+            num = 0
+        x2 = float(self.table_cutter.item(num, 0).text())
+        y2 = float(self.table_cutter.item(num, 1).text())
+        print(x1, y1, x2, y2)
 
     # добавление строки в таблицу
     def add_row_to_table_cutter(self):
