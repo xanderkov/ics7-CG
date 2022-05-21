@@ -51,7 +51,8 @@ class MyWindow(QtWidgets.QMainWindow):
         self.but_input_point_cutter.clicked.connect(self.on_bt_input_point_cutter_clicked)
         self.but_input_point_segment.clicked.connect(self.on_bt_input_point_segment_clicked)
         self.but_cut.clicked.connect(self.on_bt_cut_clicked)
-
+        self.but_parallel.clicked.connect(self.on_bt_parallel_clicked)
+        
         self.color_back = Qt.white
         self.color_cutter = None
         self.color_segment = None
@@ -99,6 +100,9 @@ class MyWindow(QtWidgets.QMainWindow):
         self.segments = []
         self.segment_prev = None
         self.direction = 0
+    
+    def on_bt_parallel_clicked(self):
+        print("Жопа")
 
     # добавление строки в таблицу
     def add_row_to_table_cutter(self):
@@ -132,21 +136,11 @@ class MyWindow(QtWidgets.QMainWindow):
             self.draw_segments([[point[0], point[1], point[0], point[1], self.color_segment]])
             self.segment_prev = point
             # добавление в таблицу
-            i = self.table_segments.rowCount()
-            self.add_row_to_table_segments()
-            x1 = QTableWidgetItem("{}".format(self.segment_prev[0]))
-            y1 = QTableWidgetItem("{}".format(self.segment_prev[1]))
-            self.table_segments.setItem(i, 0, x1)
-            self.table_segments.setItem(i, 1, y1)
+            
         else:
             self.draw_segments([[self.segment_prev[0], self.segment_prev[1], point[0], point[1], self.color_segment]])
             self.segments.append([self.segment_prev[0], self.segment_prev[1], point[0], point[1], self.color_segment])
             # добавление в таблицу
-            i = self.table_segments.rowCount()
-            x2 = QTableWidgetItem("{}".format(point[0]))
-            y2 = QTableWidgetItem("{}".format(point[1]))
-            self.table_segments.setItem(i - 1, 2, x2)
-            self.table_segments.setItem(i - 1, 3, y2)
             self.segment_prev = None
 
     # добавление вершины отрезка по кнопке
@@ -205,7 +199,6 @@ class MyWindow(QtWidgets.QMainWindow):
 
         self.cutter_points.append(point)
         self.draw_cutter()
-
         # добавление в таблицу
         i = self.table_cutter.rowCount()
         self.add_row_to_table_cutter()
@@ -287,6 +280,8 @@ class MyWindow(QtWidgets.QMainWindow):
         pix = QPixmap()  # отрисовываемая картинка
         pix.convertFromImage(self.image)
         self.scene.addPixmap(pix)
+        
+    
 
 
 if __name__ == "__main__":
