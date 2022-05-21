@@ -1,3 +1,4 @@
+from turtle import distance
 from PyQt5 import QtWidgets, uic
 from PyQt5.QtWidgets import QTableWidgetItem
 from PyQt5.QtGui import QPen, QImage, QPixmap, QPainter, QPolygon
@@ -5,6 +6,7 @@ from PyQt5.QtCore import Qt, QPoint
 from kb_cut import *
 import sys
 from copy import deepcopy
+from math import sqrt
 
 global w
 
@@ -100,6 +102,25 @@ class MyWindow(QtWidgets.QMainWindow):
         self.segments = []
         self.segment_prev = None
         self.direction = 0
+        
+    def find_parallel(self, x1, y1, x2, y2):
+        distance = 20
+        ratio = 1.5
+        dx = x2 - x1
+        dy = y2 - y1
+        len = sqrt(dx*dx+dy*dy)
+        udx = dx / len
+        udy = dy / len 
+        perpx = -udy * distance
+        perpy = udx * distance
+
+        # "left" line start
+        x1_ = x1 + perpx
+        y1_ = y1 + perpy
+        # "left" line end
+        x2_ = x1_ + dx * ratio
+        y2_ = y1_ + dy * ratio
+        return x1_, y1_, x2_, y2_
     
     
     def on_bt_parallel_clicked(self):
@@ -108,14 +129,27 @@ class MyWindow(QtWidgets.QMainWindow):
             self.handle_error('Ошибка.', 'Не выбрана сторона отсекателя в таблице')
             return;
     
-        x1 = float(self.table_cutter.item(num, 0).text())
-        y1 = float(self.table_cutter.item(num, 1).text())
+        x1 = int(self.table_cutter.item(num, 0).text())
+        y1 = int(self.table_cutter.item(num, 1).text())
+        print(num)
         num += 1
-        if (num  > self.table_cutter.rowCount()):
-            num = 0
-        x2 = float(self.table_cutter.item(num, 0).text())
-        y2 = float(self.table_cutter.item(num, 1).text())
-        print(x1, y1, x2, y2)
+        
+        if (num == self.table_cutter.rowCount()):
+            num = 1
+        
+        x2 = int(self.table_cutter.item(num, 0).text())
+        y2 = int(self.table_cutter.item(num, 1).text())
+        if (x1 == x2 and y2 == y1):
+            num += 1
+            x2 = int(self.table_cutter.item(num, 0).text())
+            y2 = int(self.table_cutter.item(num, 1).text())
+        x1_, y1_, x2_, y2_ = self.find_parallel(x1, y1, x2, y2)
+        self.add_segment_point([x1_, y1_])
+        self.add_segment_point([x2_, y2_])
+        segment = [x1_, y1_, x2_, y2_, self.color_segment]
+        self.draw_segments([segment])
+        
+        
 
     # добавление строки в таблицу
     def add_row_to_table_cutter(self):
