@@ -258,7 +258,6 @@ class MyWindow(QtWidgets.QMainWindow):
     def on_bt_connect_clicked(self):
         
         num = self.table_cutter.rowCount() - 1
-        print(num)
         x = int(self.table_cutter.item(num, 0).text())
         y = int(self.table_cutter.item(num, 1).text())
         if not self.cutter_points:
