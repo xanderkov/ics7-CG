@@ -11,5 +11,6 @@
 7. Лабораторная 7 (папка lab_07) :white_check_mark:
 8. Лабораторная 8 (папка lab_08) :white_check_mark:
 9. Лабораторная 9 (папка lab_09) :white_check_mark:
+10. Лабораторная 10 (папка lab_10) :white_check_mark:
 
 ![Алгоритм](./unknown.png)
