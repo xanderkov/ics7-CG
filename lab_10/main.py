@@ -1,5 +1,5 @@
-import design  # мой интерфейс
-from PyQt5 import QtWidgets
+from const import WCANVAS
+from PyQt5 import QtWidgets, uic
 from PyQt5.QtWidgets import QTableWidgetItem
 from PyQt5.QtGui import QPen, QImage, QPixmap, QPainter, QBrush, QPolygon, QColor
 from PyQt5.QtCore import Qt, QPoint
@@ -10,6 +10,7 @@ from functions import *
 from floating_horizont import *
 import pyqtgraph as pg  # для цветов на рисунке
 global w
+from const import WCANVAS, HCANVAS
 
 
 # код цвета по названию
@@ -32,17 +33,17 @@ def find_color_code(color_name):
         return 0xFFFFFF
 
 
-class MyWindow(QtWidgets.QMainWindow, design.Ui_MainWindow):
+class MyWindow(QtWidgets.QMainWindow):
     def __init__(self):
         # для доступа к переменным, методам и т.д. в файле design.py
         super().__init__()
         # инициализация дизайна
-        self.setupUi(self)
+        uic.loadUi("design.ui", self)
 
-        self.scene = QtWidgets.QGraphicsScene(0, 0, 1400, 1400)
+        self.scene = QtWidgets.QGraphicsScene(0, 0, WCANVAS, HCANVAS)
         self.scene.win = self
         self.graph.setScene(self.scene)
-        self.image = QImage(1400, 1400, QImage.Format_RGB32)
+        self.image = QImage(WCANVAS, HCANVAS, QImage.Format_RGB32)
         self.image.fill(Qt.black)
         pix = QPixmap()
         pix.convertFromImage(self.image)

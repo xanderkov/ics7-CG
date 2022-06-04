@@ -1,8 +1,9 @@
 from math import pi, sin, cos
+from const import WCANVAS, HCANVAS
 
-M = 80
-shx = 1400 / 2 + 50
-shy = 1400 / 2 - 50
+M = 60
+shx = WCANVAS / 2 + 20
+shy = HCANVAS / 2 - 20
 EPS = 1e-6
 
 
